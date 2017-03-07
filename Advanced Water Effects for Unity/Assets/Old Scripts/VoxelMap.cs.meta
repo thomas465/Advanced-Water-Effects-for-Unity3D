@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: d190271fa02d9a248994e37114bbf751
+timeCreated: 1477497004
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - voxelGridPrefab: {fileID: 11471920, guid: 9623513de8734274aaf7238528128491, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

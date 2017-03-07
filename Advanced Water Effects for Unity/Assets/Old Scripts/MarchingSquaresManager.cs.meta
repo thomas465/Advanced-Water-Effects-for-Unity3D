@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 75003483d810c4a4cba03f69f42bf0b5
+timeCreated: 1486129230
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - marchingSquaresShader: {fileID: 7200000, guid: c4f80e50fe923b14ea8b4566c37b484b,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

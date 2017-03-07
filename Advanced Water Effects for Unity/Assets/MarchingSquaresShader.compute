@@ -1,0 +1,122 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel GetDensities
+
+
+struct Corner
+{
+	float3 pos;
+	float density;
+};
+
+struct Cell
+{
+	Corner myCorners[8];
+};
+
+
+struct Metaball
+{
+	float3 pos;
+	float3 velocity;
+	float radius;
+};
+
+float deltaTime;
+float4 gravity;
+float4 movementSinceLastFrame;
+
+RWStructuredBuffer<Cell> allCells;
+RWStructuredBuffer<Corner> allCorners;
+RWStructuredBuffer<Metaball> allMetaballs;
+
+RWStructuredBuffer<float3> vertices;
+RWStructuredBuffer<int> triangles;
+
+int numBalls = 100;
+int numCorners = 100;
+
+int numTris = 0;
+
+int gridWidth, gridHeight;
+
+void AssignDensityToCorner(inout Corner c, inout RWStructuredBuffer<Metaball> metaballs)
+{
+	c.density = 0;
+
+	for(int i=0; i<numBalls; i++)
+	{
+		Metaball m = metaballs[i];
+		//c.pos.z = 0;
+		//m.pos.z = 0;
+
+		float otherBit = (m.radius - length((c.pos - m.pos)) * length((c.pos - m.pos)) );
+
+		float distSq = length(c.pos - m.pos);
+		distSq = distSq * distSq;
+
+		c.density += (m.radius * m.radius) / (distSq);
+	}
+}
+
+void InterpolateBetweenCorners(inout Corner c1, inout Corner c2, float value1, float value2)
+{
+	
+}
+
+void MoveAllMetaballs()
+{
+	float gravityIntensity = 0.5f;
+
+	for(int i=0; i<numBalls; i++)
+	{	
+		allMetaballs[i].pos += movementSinceLastFrame;
+
+		allMetaballs[i].velocity += gravity * deltaTime * gravityIntensity;
+		allMetaballs[i].pos += allMetaballs[i].velocity * deltaTime;
+		allMetaballs[i].velocity *= 0.65f;
+	}
+}
+
+[numthreads(8,8,1)]
+void GetDensities (uint3 id : SV_DispatchThreadID)
+{
+	int pos = (id.x + gridWidth) + (id.y * gridWidth);
+
+	MoveAllMetaballs();
+
+	allCorners[pos].pos += movementSinceLastFrame;
+	AssignDensityToCorner(allCorners[pos], allMetaballs);
+}
+
+void CreateTriangle(float3 v1, float3 v2, float3 v3)
+{
+	uint index = 0;
+	uint stride = 0;
+	vertices.GetDimensions(index, stride);
+
+	vertices[index] = v1;
+	vertices[index+1] = v2;
+	vertices[index+2] = v3;
+
+	//////////////////////////////////////
+
+	uint triangleIndex = 0;
+	uint triangleStride = 0;
+	triangles.GetDimensions(triangleIndex, triangleStride);
+
+	triangles[triangleIndex] = index;
+	triangles[triangleIndex+1] = index+1;
+	triangles[triangleIndex+2] = index+2;
+
+	numTris +=3;
+}
+
+float3 Interpolation(float3 v1, float3 v2, float i1, float i2)
+{
+        float3 finalPoint;
+
+        finalPoint = v1 + (1 - i1) * (v2 - v1) / (i2 - i1);
+
+		return finalPoint;
+}
+

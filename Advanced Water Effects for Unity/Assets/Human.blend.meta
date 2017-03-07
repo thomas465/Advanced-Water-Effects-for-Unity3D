@@ -1,0 +1,219 @@
+fileFormatVersion: 2
+guid: 3f50c91caaa924a42a3226da76e8e311
+timeCreated: 1475231926
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Blade
+    100002: Cube
+    100004: Cube_001
+    100006: Cube_002
+    100008: Cube_003
+    100010: Cylinder
+    100012: Cylinder_001
+    100014: Empty
+    100016: Empty_001
+    100018: finger1_l
+    100020: finger1_r
+    100022: finger1low_l
+    100024: finger1low_r
+    100026: finger2_l
+    100028: finger2_r
+    100030: finger2low_l
+    100032: finger2low_r
+    100034: finger3_l
+    100036: finger3_r
+    100038: finger3low_l
+    100040: finger3low_r
+    100042: finger4_l
+    100044: finger4_r
+    100046: finger4low_l
+    100048: finger4low_r
+    100050: foot_l
+    100052: foot_r
+    100054: hand_l
+    100056: hand_r
+    100058: head
+    100060: higharm_l
+    100062: higharm_r
+    100064: HighSpine
+    100066: Human
+    100068: //RootNode
+    100070: lowarm_l
+    100072: lowarm_r
+    100074: LowSpine
+    100076: neck
+    100078: Scabbard
+    100080: shin_l
+    100082: shin_r
+    100084: Shoulder_l
+    100086: Shoulder_r
+    100088: Sword
+    100090: thigh_l
+    100092: thigh_r
+    100094: thumb1_l
+    100096: thumb1_r
+    100098: thumb2_l
+    100100: thumb2_r
+    400000: Blade
+    400002: Cube
+    400004: Cube_001
+    400006: Cube_002
+    400008: Cube_003
+    400010: Cylinder
+    400012: Cylinder_001
+    400014: Empty
+    400016: Empty_001
+    400018: finger1_l
+    400020: finger1_r
+    400022: finger1low_l
+    400024: finger1low_r
+    400026: finger2_l
+    400028: finger2_r
+    400030: finger2low_l
+    400032: finger2low_r
+    400034: finger3_l
+    400036: finger3_r
+    400038: finger3low_l
+    400040: finger3low_r
+    400042: finger4_l
+    400044: finger4_r
+    400046: finger4low_l
+    400048: finger4low_r
+    400050: foot_l
+    400052: foot_r
+    400054: hand_l
+    400056: hand_r
+    400058: head
+    400060: higharm_l
+    400062: higharm_r
+    400064: HighSpine
+    400066: Human
+    400068: //RootNode
+    400070: lowarm_l
+    400072: lowarm_r
+    400074: LowSpine
+    400076: neck
+    400078: Scabbard
+    400080: shin_l
+    400082: shin_r
+    400084: Shoulder_l
+    400086: Shoulder_r
+    400088: Sword
+    400090: thigh_l
+    400092: thigh_r
+    400094: thumb1_l
+    400096: thumb1_r
+    400098: thumb2_l
+    400100: thumb2_r
+    2300000: Cube_001
+    2300002: Cube_002
+    2300004: Cylinder
+    2300006: Cylinder_001
+    2300008: Scabbard
+    3300000: Cube_001
+    3300002: Cube_002
+    3300004: Cylinder
+    3300006: Cylinder_001
+    3300008: Scabbard
+    4300000: Scabbard
+    4300002: Cylinder_001
+    4300004: Cylinder
+    4300006: Cube_002
+    4300008: Cube_001
+    4300010: Sword
+    4300012: Cube_003
+    4300014: Cube
+    4300016: Blade
+    7400000: Default Take
+    7400002: Aim
+    7400004: Aim_FireBomb
+    7400006: BigLand
+    7400008: Climbing_ClimbUp
+    7400010: Climbing_Idle
+    7400012: Climbing_Movement
+    7400014: Death
+    7400016: Falling
+    7400018: Hand_Closed
+    7400020: Hand_Open
+    7400022: Idle
+    7400024: Land
+    7400026: Melee1
+    7400028: Melee2
+    7400030: Reload
+    7400032: Roll_Forward
+    7400034: Run
+    7400036: Sprint
+    7400038: Sword_Hit1
+    7400040: Sword_Hit2
+    7400042: Walk
+    9500000: //RootNode
+    13700000: Blade
+    13700002: Cube
+    13700004: Cube_003
+    13700006: Sword
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

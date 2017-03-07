@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: b824a51c3307bc040b98ad6b3fdf61dc
+timeCreated: 1486211409
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - vMPool: {fileID: 1376829363396510, guid: 87cd62654b808e242b96b9d5ff00d31e, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

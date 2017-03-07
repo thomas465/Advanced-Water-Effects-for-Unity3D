@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 916b351f7a0a2b74e9d5b77ca9f04555
+timeCreated: 1480596390
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - metaballPrefab: {fileID: 140200, guid: f8767e17fd6c5cf4d9aa3e1f251f513a, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
