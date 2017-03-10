@@ -44,6 +44,7 @@ public class MetaballManager : MonoBehaviour
     /// Class used to maintain info like metaball life and radius
     /// </summary>
     [System.Serializable]
+    [RequireComponent(typeof(BoxCollider))]
     public class Metaball
     {
         public Vector3 pos;
@@ -223,6 +224,21 @@ public class MetaballManager : MonoBehaviour
     // Use this for initialization
     void Awake()
     {
+        if(!GetComponent<BoxCollider>())
+        {
+            Debug.LogError("Metaball manager " + gameObject.name + " has no BoxCollider to use as a frame! Put a box collider on " + gameObject.name + " and size it as if it is the bounds for your desired 3D effect.");
+            Debug.Break();
+            return;
+        }
+        else
+        {
+            if (!GetComponent<BoxCollider>().isTrigger)
+            {
+                Debug.LogWarning("Collider on " + gameObject.name + " has been turned into a trigger; MetaballManager box colliders should always be trigger colliders.");
+                GetComponent<BoxCollider>().isTrigger = true;
+            }
+        }
+
         allMetaballs = new List<Metaball>();
 
         prevPos = transform.position;
@@ -512,23 +528,27 @@ public class MetaballManager : MonoBehaviour
                 RefreshGrid();
             }
 
-            //Render mesh
+            //Fill in density values
             GetDensitiesFromGPU();
 
-
+            //Clear the mesh from the previous tick
             myMesh.Clear();
-            int i = 0;
 
-            for (i = 0; i < allCells.Count; i++)
+            for (int i = 0; i < allCells.Count; i++)
             {
                 //TriangulateGPUCell(gpuCorners[i], gpuCorners[i + 1], gpuCorners[i + 2], gpuCorners[i + 3], gpuCorners[i + 4], gpuCorners[i + 5], gpuCorners[i + 6], gpuCorners[i + 7]);
                 TriangulateCell(allCells[i].myCorners);
                 //TriangulateCell(newCorners);
             }
 
-            myMesh.vertices = vertList.ToArray();
-            myMesh.triangles = triangleList.ToArray();
-            myMesh.RecalculateNormals();
+            ReturnDataFromGPUBuffer();
+
+            if (vertList.Count == triangleList.Count)
+            {
+                myMesh.vertices = vertList.ToArray();
+                myMesh.triangles = triangleList.ToArray();
+                myMesh.RecalculateNormals();
+            }
 
             //This works well but is very slow
             //myMesh.SetUVs(0, UnityEditor.Unwrapping.GeneratePerTriangleUV(myMesh));
@@ -581,17 +601,19 @@ public class MetaballManager : MonoBehaviour
         myComputeShader.SetBuffer(myComputeShader.FindKernel("GetDensities"), "allMetaballs", metaballBuffer);
 
         //Calculation happens here
-        myComputeShader.Dispatch(myComputeShader.FindKernel("GetDensities"), cellsPerSide[0]/8, cellsPerSide[1]/8, cellsPerSide[2]/8);
+        myComputeShader.Dispatch(myComputeShader.FindKernel("GetDensities"), cellsPerSide[0] / 8, cellsPerSide[1] / 8, cellsPerSide[2] / 8);
+    }
 
+    void ReturnDataFromGPUBuffer()
+    {
         //Returns the info to the "real world"
         cornerBuffer.GetData(gpuCorners);
 
-        for(int i=0; i<gpuCorners.Length; i++)
+        for (int i = 0; i < gpuCorners.Length; i++)
         {
             allCellCorners[i].currentIntensity = gpuCorners[i].currentIntensity;
             allCellCorners[i].active = allCellCorners[i].currentIntensity >= 1;
         }
-
     }
 
     void GetVerticesFromGPU()
@@ -758,7 +780,7 @@ public class MetaballManager : MonoBehaviour
     /// </summary>
     /// <param name="nodes"></param>
     void TriangulateCell(CellCorner[] nodes)
-    {        
+    {
         int cellType = 0;
 
         //Setting cellType
@@ -884,7 +906,7 @@ public class MetaballManager : MonoBehaviour
 
             currentDetailLevel = Mathf.Lerp(1, 0, scaledDistance);
 
-            tickRate = Mathf.Lerp(0.015f, 0.1f, scaledDistance * 2);
+            tickRate = Mathf.Lerp(0.025f, 0.2f, scaledDistance * 2);
 
             yield return levelOfDetailTickRate;
         }

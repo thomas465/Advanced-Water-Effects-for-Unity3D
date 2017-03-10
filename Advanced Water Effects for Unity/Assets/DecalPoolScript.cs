@@ -13,8 +13,8 @@ public class DecalPoolScript : MonoBehaviour
     int curIndex = 0;
 
     //Consts
-    static float gridSize = 1.5f;
-    static int gridMaxAmount = 120, gridRes = 32;
+    static float baseGridSize = 1.5f;
+    static int baseGridMaxAmount = 120, baseGridRes = 32;
 
     void Awake()
     {
@@ -25,7 +25,7 @@ public class DecalPoolScript : MonoBehaviour
         else
         {
             singleton = this;
-            CreateGridPool(gridMaxAmount);
+            CreateGridPool(baseGridMaxAmount);
             //DontDestroyOnLoad(gameObject);
         }
     }
@@ -51,11 +51,11 @@ public class DecalPoolScript : MonoBehaviour
         }
     }
 
-    public void CreateStain(Vector3 pos, Vector3 normal, GameObject surfaceObj, Material newMaterial = null)
+    public void CreateStain(Vector3 pos, Vector3 normal, GameObject surfaceObj, Material newMaterial = null, float size = 1, float metaballSize = 1)
     {
-        if (!IsExistingGrid(pos))
+        if (!IsExistingGrid(pos, size, metaballSize))
         {
-            GetAvailableGrid().Create(pos, normal, gridSize, gridRes, surfaceObj, newMaterial);
+            GetAvailableGrid().Create(pos, normal, baseGridSize * size, baseGridRes, surfaceObj, newMaterial, metaballSize);
         }
     }
 
@@ -67,10 +67,10 @@ public class DecalPoolScript : MonoBehaviour
     //    }
     //}
 
-    bool IsExistingGrid(Vector3 pos)
+    bool IsExistingGrid(Vector3 pos, float size, float metaballSize)
     {
-        float threshold = gridSize * 0.25f;
-        float burstThreshold = gridSize * 0.1f;
+        float threshold = baseGridSize * size * 0.15f;
+        float burstThreshold = baseGridSize * 0.1f;
 
         for (int i = 0; i < gridPool.Length; i++)
         {
@@ -80,7 +80,8 @@ public class DecalPoolScript : MonoBehaviour
             {
                 if (dist >= burstThreshold)
                 {
-                    gridPool[i].BurstMetaballs(1, pos, 1);
+                    //Debug.Log("Bursting from old one");
+                    gridPool[i].BurstMetaballs(1, pos, 1, metaballSize);
                 }
 
                 return true;
@@ -140,18 +141,18 @@ public class DecalPoolScript : MonoBehaviour
 
             if(Input.GetKeyDown(KeyCode.E))
             {
-                gridMaxAmount++;
-                gridRes++;
-                Debug.Log(gridRes);
+                baseGridMaxAmount++;
+                baseGridRes++;
+                Debug.Log(baseGridRes);
                 Rebuild();
             }
 
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                if (gridMaxAmount > 1 && gridRes > 8)
+                if (baseGridMaxAmount > 1 && baseGridRes > 8)
                 {
-                    gridMaxAmount--;
-                    gridRes--;
+                    baseGridMaxAmount--;
+                    baseGridRes--;
                     Rebuild();
                 }
             }
@@ -165,6 +166,6 @@ public class DecalPoolScript : MonoBehaviour
             Destroy(gridPool[i].gameObject);
         }
 
-        CreateGridPool(gridMaxAmount);
+        CreateGridPool(baseGridMaxAmount);
     }
 }

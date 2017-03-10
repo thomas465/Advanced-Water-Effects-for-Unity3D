@@ -131,7 +131,7 @@ public class MarchingSquaresGrid : MonoBehaviour
     /// <param name="newResolution"></param>
     /// <param name="surface"></param>
     /// <param name="newMaterial"></param>
-    public void Create(Vector3 pos, Vector3 forward, float newSize, float newResolution, GameObject surface, Material newMaterial = null)
+    public void Create(Vector3 pos, Vector3 forward, float newSize, float newResolution, GameObject surface, Material newMaterial = null, float metaballSize = 1)
     {
         if (newMaterial)
         {
@@ -143,7 +143,7 @@ public class MarchingSquaresGrid : MonoBehaviour
             meshRenderer.material = newMaterial;
         }
 
-        transform.position = pos + (forward * 0.05f);
+        transform.position = pos + (forward * 0.02f);
         transform.rotation = Quaternion.LookRotation(forward);
         transform.SetParent(surface.transform);
 
@@ -193,7 +193,7 @@ public class MarchingSquaresGrid : MonoBehaviour
             curPos += transform.up * movementSize;
         }
 
-        BurstMetaballs(1, transform.position);
+        BurstMetaballs(1, transform.position, 6, metaballSize);
 
         //Gets the correct gravity direction while making sure that the metaballs won't move off of this 2D grid
         metaballGravity = -Vector3.up;
@@ -284,12 +284,12 @@ public class MarchingSquaresGrid : MonoBehaviour
         }
     }
 
-    public void BurstMetaballs(float speed, Vector3 pos, float num = 6)
+    public void BurstMetaballs(float speed, Vector3 pos, float num = 6, float size = 1)
     {
-        int maxBalls = 28;
-        float ballSize = 0.35f;
+        int maxBalls = 18;
+        float ballSize = 0.35f * size;
 
-        speed = speed * 3;
+        speed = speed * 3.5f;
 
         for (int i = 0; i < num; i++)
         {
@@ -305,7 +305,7 @@ public class MarchingSquaresGrid : MonoBehaviour
                 newMetaball.velocity = new Vector2(Random.Range(-speed, speed), Random.Range(-speed, speed));
                 newMetaball.velocity = transform.TransformDirection(newMetaball.velocity);
 
-                newMetaball.radius = Mathf.Clamp(ballSize / (newMetaball.velocity.magnitude/ballSize), ballSize*0.2f, ballSize * 0.5f);
+                newMetaball.radius = Mathf.Clamp(ballSize / (newMetaball.velocity.magnitude/ballSize), ballSize*0.2f, ballSize * 0.85f);
 
                 allMetaball2Ds.Add(newMetaball);
             }
@@ -482,9 +482,9 @@ public class MarchingSquaresGrid : MonoBehaviour
             else
             {
                 int startPos = i * 4;
-                Cell c = allCells[i];
+                //Cell c = allCells[i];
                 //TriangulateCell(allNodes[startPos], allNodes[startPos + 1], allNodes[startPos + 2], allNodes[startPos + 3]);
-                TriangulateCell(c);
+                TriangulateCell(ref allCells[i]);
             }
             //TriangulateCell(allCells[i]);
             //TriangulateCell(allCells[i], allCells[i + 1], allCells[i + (int)resolution], allCells[i + (int)resolution + 1], allCells[i + (int)resolution * (int)resolution], allCells[i + ((int)resolution * (int)resolution) + 1], allCells[i + ((int)resolution * (int)resolution) + (int)resolution], allCells[i + ((int)resolution * (int)resolution) + 1]);
@@ -539,39 +539,41 @@ public class MarchingSquaresGrid : MonoBehaviour
             myCS.SetBuffer(myCS.FindKernel("GetDensities"), "allCorners", cellCornerBuffer);
             myCS.SetBuffer(myCS.FindKernel("GetDensities"), "allMetaballs", metaballBuffer);
 
-   
-
             myCS.Dispatch(myCS.FindKernel("GetDensities"), sqrt/8, sqrt/8, 1);
+        }
+    }
 
-            if (gpuNodeInfo==null || gpuNodeInfo.Length != cellCornerBuffer.count)
-            {
-                gpuNodeInfo = new CellCorner[cellCornerBuffer.count];
-            }
+    void ReturnDataFromGPU()
+    {
+        if (gpuNodeInfo == null || gpuNodeInfo.Length != cellCornerBuffer.count)
+        {
+            gpuNodeInfo = new CellCorner[cellCornerBuffer.count];
+        }
 
-            if (gpuMetaballInfo == null || gpuMetaballInfo.Length != metaballBuffer.count)
-            {
-                gpuMetaballInfo = new Metaball2D[metaballBuffer.count];
-            }
+        if (gpuMetaballInfo == null || gpuMetaballInfo.Length != metaballBuffer.count)
+        {
+            gpuMetaballInfo = new Metaball2D[metaballBuffer.count];
+        }
 
-            cellCornerBuffer.GetData(gpuNodeInfo);
-            metaballBuffer.GetData(gpuMetaballInfo);
+        cellCornerBuffer.GetData(gpuNodeInfo);
+        metaballBuffer.GetData(gpuMetaballInfo);
 
-            for (int i=0; i<allNodes.Count; i++)
-            {
-                allNodes[i] = gpuNodeInfo[i];
-            }
+        for (int i = 0; i < allNodes.Count; i++)
+        {
+            allNodes[i] = gpuNodeInfo[i];
+        }
 
-            for (int i = 0; i < allMetaball2Ds.Count; i++)
-            {
-                allMetaball2Ds[i] = gpuMetaballInfo[i];
-            }
-
-            //Debug.Log(allNodes[0].density);
+        for (int i = 0; i < allMetaball2Ds.Count; i++)
+        {
+            allMetaball2Ds[i] = gpuMetaballInfo[i];
         }
     }
 
     IEnumerator HeavyCalculations()
     {
+        float timeDelay = 0.025f;
+        WaitForSeconds delay = new WaitForSeconds(timeDelay);
+
         while (true)
         {
             if (animatedTime > 0)
@@ -586,32 +588,28 @@ public class MarchingSquaresGrid : MonoBehaviour
                     //AssignDensities();
 
                     ApplyComputeShader();
-                    yield return new WaitForSeconds(0.01f);
-                }
+                    //yield return new WaitForSeconds(timeDelay);
 
-                if (marchingSquaresEnabled)
-                {
                     Triangulate();
                 }
 
                 animatedTime -= Time.deltaTime;
             }
-
-            if(!marchingSquaresEnabled)
+            else
             {
                 mesh.Clear();
             }
 
-            prevPos = transform.position;
 
-            float timeDelay = 0.05f;
-            yield return new WaitForSeconds(timeDelay);
+            prevPos = transform.position;
+            ReturnDataFromGPU();
+
+            yield return delay;
         }
     }
 
-    void TriangulateCell(Cell c)
+    void TriangulateCell(ref Cell c)
     {
-        //CONVERT THIS BACK TO BEING A CELL PASSED IN
 
         int cellType = 0;
 
@@ -643,11 +641,11 @@ public class MarchingSquaresGrid : MonoBehaviour
         if (c.cornerDensities[3] >= 1)
             cellType |= 8;
 
-        if(Input.GetKeyDown(KeyCode.C))
-            Debug.Log(cellType);
+        //if(Input.GetKeyDown(KeyCode.C))
+        //    Debug.Log(cellType);
 
-        if(Input.GetKey(KeyCode.T))
-        cellType = debug;
+        //if(Input.GetKey(KeyCode.T))
+        //cellType = debug;
 
 
         //Placing triangles

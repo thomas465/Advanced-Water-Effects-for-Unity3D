@@ -65,7 +65,7 @@ void InterpolateBetweenCorners(inout Corner c1, inout Corner c2, float value1, f
 
 void MoveAllMetaballs()
 {
-	float gravityIntensity = 0.5f;
+	float gravityIntensity = 0.95f;
 
 	for(int i=0; i<numBalls; i++)
 	{	

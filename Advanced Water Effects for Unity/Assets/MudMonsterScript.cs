@@ -21,13 +21,13 @@ public class MudMonsterScript : EnemyScript {
             {
                 RaycastHit rH;
 
-                if(Physics.Raycast(transform.position, -transform.up, out rH))
+                if(Physics.Raycast(transform.position, -transform.up * 0.2f, out rH))
                 {
-                    DecalPoolScript.singleton.CreateStain(rH.point, rH.normal, rH.collider.gameObject, stainMat);
+                    DecalPoolScript.singleton.CreateStain(rH.point, rH.normal, rH.collider.gameObject, stainMat, 2, 1.2f);
                 }
             }
 
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(0.004f);
         }
     }
 }

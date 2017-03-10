@@ -137,11 +137,13 @@ public class MetaballScript : MonoBehaviour
     /// <param name="col"></param>
     protected virtual void OnCollisionEnter(Collision col)
     {
-        if (!bounced && col.gameObject.layer!=LayerMask.GetMask("NoStains"))
+        if (!bounced && col.gameObject.layer!=10 && col.gameObject.layer != 4)
         {
             //CreateMarchingSquaresNodesOnSurface(col);
 
             //myMSManager.MetaballCollision(col, this);
+
+            //Debug.Log("Metaball hit layer " + col.gameObject.layer);
 
             if (DecalPoolScript.singleton)
             {

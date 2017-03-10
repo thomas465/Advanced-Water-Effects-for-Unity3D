@@ -40,6 +40,8 @@ public class EnemyScript : MonoBehaviour {
         Vector3 dir = (PlayerScript.singleton.transform.position - transform.position);
         rb.AddForce(dir.normalized * speed * 0.02f, ForceMode.VelocityChange);
 
+        dir.y = 0;
+
         rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.LookRotation(dir), 3 * Time.deltaTime);
     }
 
