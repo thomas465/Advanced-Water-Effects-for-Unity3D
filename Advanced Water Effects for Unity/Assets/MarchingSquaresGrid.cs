@@ -23,7 +23,7 @@ public class MarchingSquaresGrid : MonoBehaviour
     }
 
     [System.Serializable]
-    struct CellCorner
+    public struct CellCorner
     {
         public Vector3 cornerPosition;
         public float density;
@@ -41,6 +41,7 @@ public class MarchingSquaresGrid : MonoBehaviour
 
     float worldSize = 0;
     float resolution = 0;
+    int sideLength = 0;
 
     float animatedTime = 2;
     public float dryOutTime = 20;
@@ -210,6 +211,8 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         cellCornerBuffer = new ComputeBuffer(allNodes.Count, sizeOfNodeStruct);
         cellCornerBuffer.SetData(allNodes.ToArray());
+
+        sideLength = (int)Mathf.Sqrt(allNodes.Count);
     }
 
     void FixedUpdate()
@@ -523,11 +526,9 @@ public class MarchingSquaresGrid : MonoBehaviour
     {
         if(cellCornerBuffer.count>1 && metaballBuffer.count>1)
         {
-            int sqrt = (int)Mathf.Sqrt(allNodes.Count);
-
             myCS.SetInt("numBalls", allMetaball2Ds.Count);
-            myCS.SetInt("gridWidth", sqrt);
-            myCS.SetInt("gridHeight", sqrt);
+            myCS.SetInt("gridWidth", sideLength);
+            myCS.SetInt("gridHeight", sideLength);
 
             myCS.SetFloat("deltaTime", Time.deltaTime);
 
@@ -539,7 +540,7 @@ public class MarchingSquaresGrid : MonoBehaviour
             myCS.SetBuffer(myCS.FindKernel("GetDensities"), "allCorners", cellCornerBuffer);
             myCS.SetBuffer(myCS.FindKernel("GetDensities"), "allMetaballs", metaballBuffer);
 
-            myCS.Dispatch(myCS.FindKernel("GetDensities"), sqrt/8, sqrt/8, 1);
+            myCS.Dispatch(myCS.FindKernel("GetDensities"), sideLength / 8, sideLength / 8, 1);
         }
     }
 
@@ -588,9 +589,9 @@ public class MarchingSquaresGrid : MonoBehaviour
                     //AssignDensities();
 
                     ApplyComputeShader();
-                    //yield return new WaitForSeconds(timeDelay);
+                    yield return new WaitForSeconds(timeDelay);
 
-                    Triangulate();
+                    
                 }
 
                 animatedTime -= Time.deltaTime;
@@ -602,9 +603,12 @@ public class MarchingSquaresGrid : MonoBehaviour
 
 
             prevPos = transform.position;
-            ReturnDataFromGPU();
+
+            Triangulate();
+            
 
             yield return delay;
+            ReturnDataFromGPU();
         }
     }
 

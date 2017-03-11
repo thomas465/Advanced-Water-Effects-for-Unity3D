@@ -541,7 +541,7 @@ public class MetaballManager : MonoBehaviour
                 //TriangulateCell(newCorners);
             }
 
-            ReturnDataFromGPUBuffer();
+            
 
             if (vertList.Count == triangleList.Count)
             {
@@ -555,8 +555,9 @@ public class MetaballManager : MonoBehaviour
 
             vertList.Clear();
             triangleList.Clear();
-
+            
             yield return new WaitForSeconds(tickRate);
+            ReturnDataFromGPUBuffer();
         }
     }
 

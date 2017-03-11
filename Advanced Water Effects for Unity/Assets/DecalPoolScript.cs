@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DecalPoolScript : MonoBehaviour
-{
-
+{ 
     public static DecalPoolScript singleton;
 
     MarchingSquaresGrid[] gridPool;
@@ -14,7 +13,10 @@ public class DecalPoolScript : MonoBehaviour
 
     //Consts
     static float baseGridSize = 1.5f;
-    static int baseGridMaxAmount = 120, baseGridRes = 32;
+    static int baseGridMaxAmount = 24, baseGridRes = 24;
+
+    //Pool of nodes
+    public static List<MarchingSquaresGrid.CellCorner> allCellCorners;
 
     void Awake()
     {
@@ -123,6 +125,7 @@ public class DecalPoolScript : MonoBehaviour
     {
 
     }
+
 
     // Update is called once per frame
     void Update()
