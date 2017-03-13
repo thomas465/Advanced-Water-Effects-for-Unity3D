@@ -1,5 +1,6 @@
 ﻿// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel GetDensities
+
 #pragma kernel GetVertices
 
 struct Corner
@@ -60,7 +61,7 @@ void InterpolateBetweenCorners(inout Corner c1, inout Corner c2, float value1, f
 }
 
 //Figures out which corner to work with and then has that corner calculate its density
-[numthreads(8,8,8)]
+[numthreads(4,4,4)]
 void GetDensities (uint3 id : SV_DispatchThreadID)
 {
 	int pos = (id.x + gridWidth) + (id.y * gridWidth) + (id.z * gridWidth * gridHeight);	

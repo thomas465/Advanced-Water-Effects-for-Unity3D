@@ -1,6 +1,6 @@
 ﻿// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel GetDensities
-
+#pragma kernel UpdatePhysics
 
 struct Corner
 {
@@ -77,15 +77,34 @@ void MoveAllMetaballs()
 	}
 }
 
+void MoveMetaball(int i)
+{
+	float gravityIntensity = 0.95f;
+
+		allMetaballs[i].pos += movementSinceLastFrame;
+
+		allMetaballs[i].velocity += gravity * deltaTime * gravityIntensity;
+		allMetaballs[i].pos += allMetaballs[i].velocity * deltaTime;
+
+		//Apply drag
+		allMetaballs[i].velocity *= 1 - (deltaTime*6.0f);
+}
+
 [numthreads(8,8,1)]
 void GetDensities (uint3 id : SV_DispatchThreadID)
 {
-	int pos = (id.x + gridWidth) + (id.y * gridWidth);
-
-	MoveAllMetaballs();
+	int pos = (id.x + gridWidth) + (id.y * gridWidth);	
 
 	allCorners[pos].pos += movementSinceLastFrame;
 	AssignDensityToCorner(allCorners[pos], allMetaballs);
+}
+
+[numthreads(8,1,1)]
+void UpdatePhysics (uint3 id : SV_DispatchThreadID)
+{
+	int pos = id.x;
+
+	MoveMetaball(pos);
 }
 
 void CreateTriangle(float3 v1, float3 v2, float3 v3)

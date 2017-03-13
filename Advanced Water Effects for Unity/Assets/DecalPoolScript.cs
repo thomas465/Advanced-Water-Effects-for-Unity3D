@@ -12,8 +12,8 @@ public class DecalPoolScript : MonoBehaviour
     int curIndex = 0;
 
     //Consts
-    static float baseGridSize = 1.5f;
-    static int baseGridMaxAmount = 24, baseGridRes = 24;
+    static float baseGridSize = 1.25f;
+    static int baseGridMaxAmount = 24, baseGridRes = 28;
 
     //Pool of nodes
     public static List<MarchingSquaresGrid.CellCorner> allCellCorners;
@@ -22,13 +22,13 @@ public class DecalPoolScript : MonoBehaviour
     {
         if (singleton)
         {
-            Destroy(gameObject);
+            Destroy(this);
         }
         else
         {
             singleton = this;
             CreateGridPool(baseGridMaxAmount);
-            //DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
         }
     }
 
@@ -40,17 +40,22 @@ public class DecalPoolScript : MonoBehaviour
         {
             gridPool[i] = Instantiate<GameObject>(vMPool).GetComponent<MarchingSquaresGrid>();
 
-            //DontDestroyOnLoad(gridPool[i].gameObject);
+            DontDestroyOnLoad(gridPool[i].gameObject);
             gridPool[i].gameObject.SetActive(false);
         }
     }
 
     void OnLevelWasLoaded()
     {
-        for (int i = 0; i < gridPool.Length; i++)
+        if (gridPool!=null)
         {
-            gridPool[i].Disable();
+            for (int i = 0; i < gridPool.Length; i++)
+            {
+                Destroy(gridPool[i]);
+            }
         }
+
+        CreateGridPool(baseGridMaxAmount);
     }
 
     public void CreateStain(Vector3 pos, Vector3 normal, GameObject surfaceObj, Material newMaterial = null, float size = 1, float metaballSize = 1)
@@ -71,7 +76,7 @@ public class DecalPoolScript : MonoBehaviour
 
     bool IsExistingGrid(Vector3 pos, float size, float metaballSize)
     {
-        float threshold = baseGridSize * size * 0.15f;
+        float threshold = baseGridSize * size * 0.25f;
         float burstThreshold = baseGridSize * 0.1f;
 
         for (int i = 0; i < gridPool.Length; i++)
@@ -115,7 +120,7 @@ public class DecalPoolScript : MonoBehaviour
             curIndex = 0;
         }
 
-        Debug.Log("RESTPO");
+        //Debug.Log("RESTPO");
 
         return gridPool[curIndex];
     }

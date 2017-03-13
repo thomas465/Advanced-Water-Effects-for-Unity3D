@@ -15,6 +15,8 @@ public class MetaballScript : MonoBehaviour
     bool scaleUp = true;
     float maxSize = 1;
 
+    float viscocity = 0.95f;
+
     bool bounced = false;
 
     protected bool shrinkAway = true;
@@ -72,6 +74,11 @@ public class MetaballScript : MonoBehaviour
         }
 
         gameObject.SetActive(false);
+    }
+
+    public bool CanHit()
+    {
+        return GetVelocity().magnitude>4;
     }
 
     /// <summary>
@@ -145,7 +152,7 @@ public class MetaballScript : MonoBehaviour
 
             //Debug.Log("Metaball hit layer " + col.gameObject.layer);
 
-            if (DecalPoolScript.singleton)
+            if (DecalPoolScript.singleton && myManager)
             {
                 DecalPoolScript.singleton.CreateStain(col.contacts[0].point, col.contacts[0].normal, col.gameObject, myManager.GetComponent<MeshRenderer>().materials[0]);
             }
@@ -162,6 +169,11 @@ public class MetaballScript : MonoBehaviour
                 Vector3 velo = col.relativeVelocity * 0.5f;
                 rb.velocity += transform.forward * Random.Range(velo.magnitude * 0.5f, velo.magnitude * 0.75f);
             }
+
+            //Makes fluids break down if they're not gloopy
+            myInfo.radius *= viscocity;
+            transform.localScale *= viscocity;
+
 
             //myMSManager.CreateDecalSquares(transform.position, col.contacts[0].normal, rb.velocity.normalized, myInfo.radius, rb.velocity.magnitude);
 

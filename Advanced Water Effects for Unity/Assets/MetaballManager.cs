@@ -211,6 +211,11 @@ public class MetaballManager : MonoBehaviour
     Vector3 prevContainerSize;
     float prevRes;
 
+    [Header("Settings")]
+    public bool calculateNormals = true;
+    [Tooltip("VERY SLOW")]
+    public bool calculateUVs = false;
+
     [Header("Level of Detail Settings")]
     Transform mainCamera;
     float tickRate = 0.03f;
@@ -528,6 +533,7 @@ public class MetaballManager : MonoBehaviour
                 RefreshGrid();
             }
 
+            
             //Fill in density values
             GetDensitiesFromGPU();
 
@@ -547,11 +553,18 @@ public class MetaballManager : MonoBehaviour
             {
                 myMesh.vertices = vertList.ToArray();
                 myMesh.triangles = triangleList.ToArray();
-                myMesh.RecalculateNormals();
+
+                if (calculateNormals)
+                {
+                    myMesh.RecalculateNormals();
+                }
             }
 
             //This works well but is very slow
-            //myMesh.SetUVs(0, UnityEditor.Unwrapping.GeneratePerTriangleUV(myMesh));
+            if (calculateUVs)
+            {
+                //myMesh.SetUVs(0, UnityEditor.Unwrapping.GeneratePerTriangleUV(myMesh));
+            }
 
             vertList.Clear();
             triangleList.Clear();
@@ -602,7 +615,7 @@ public class MetaballManager : MonoBehaviour
         myComputeShader.SetBuffer(myComputeShader.FindKernel("GetDensities"), "allMetaballs", metaballBuffer);
 
         //Calculation happens here
-        myComputeShader.Dispatch(myComputeShader.FindKernel("GetDensities"), cellsPerSide[0] / 8, cellsPerSide[1] / 8, cellsPerSide[2] / 8);
+        myComputeShader.Dispatch(myComputeShader.FindKernel("GetDensities"), cellsPerSide[0] / 4, cellsPerSide[1] / 4, cellsPerSide[2] / 4);
     }
 
     void ReturnDataFromGPUBuffer()
@@ -907,7 +920,7 @@ public class MetaballManager : MonoBehaviour
 
             currentDetailLevel = Mathf.Lerp(1, 0, scaledDistance);
 
-            tickRate = Mathf.Lerp(0.025f, 0.2f, scaledDistance * 2);
+            tickRate = Mathf.Lerp(0.015f, 0.2f, scaledDistance * 2);
 
             yield return levelOfDetailTickRate;
         }

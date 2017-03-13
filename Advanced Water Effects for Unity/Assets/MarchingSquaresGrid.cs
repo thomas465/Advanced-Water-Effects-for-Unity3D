@@ -73,6 +73,8 @@ public class MarchingSquaresGrid : MonoBehaviour
     Vector3 prevPos = Vector3.zero;
     Vector3 movementSinceLastFrame = Vector3.zero;
 
+    Vector3 prevCellPos;
+
     void Awake()
     {
         sizeOfMetaball = (sizeof(float) * 6) + sizeof(float);
@@ -217,6 +219,7 @@ public class MarchingSquaresGrid : MonoBehaviour
 
     void FixedUpdate()
     {
+        
        // Debug.Log(marchingSquaresEnabled);
     }
 
@@ -289,7 +292,7 @@ public class MarchingSquaresGrid : MonoBehaviour
 
     public void BurstMetaballs(float speed, Vector3 pos, float num = 6, float size = 1)
     {
-        int maxBalls = 18;
+        int maxBalls = 48;
         float ballSize = 0.35f * size;
 
         speed = speed * 3.5f;
@@ -346,11 +349,18 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         //Debug.DrawLine(pos, pos - transform.forward, Color.magenta, 2);
 
-        if(Physics.Raycast(pos + (transform.forward*0.02f), -transform.forward, out rH, 0.1f, LayerMask.GetMask("Default")))
+        if(Physics.Raycast(pos + (transform.forward*0.052f), -transform.forward, out rH, 0.41f, LayerMask.GetMask("Default")))
         {
-            Debug.DrawLine(pos, pos + (transform.forward * 0.02f), Color.green, 5);
-
-            pos = rH.point + (transform.forward*0.012f);
+            if (Vector3.Dot(transform.forward, rH.normal) > 0f)
+            {
+                Debug.DrawLine(pos, pos + (transform.forward * 0.012f), Color.green, 5);
+                pos = rH.point + (rH.normal * 0.012f);
+            }
+            else
+            {
+                //No cell here
+                allCells[i].disabled = true;
+            }
         }
         else
         {
@@ -415,6 +425,7 @@ public class MarchingSquaresGrid : MonoBehaviour
     {
         allCells = null;
         gameObject.SetActive(false);
+
     }
 
     void OnDrawGizmos()
@@ -435,24 +446,24 @@ public class MarchingSquaresGrid : MonoBehaviour
             }
         }
 
-        if (gameObject.activeInHierarchy)
-        {
-            if (allNodes.Count < 6)
-            {
-                for (int i = 0; i < allNodes.Count; i++)
-                {
-                    UnityEditor.Handles.Label(allNodes[i].cornerPosition, "" + allNodes[i].density);
-                }
-            }
-        }
+        //if (gameObject.activeInHierarchy)
+        //{
+        //    if (allNodes.Count < 6)
+        //    {
+        //        for (int i = 0; i < allNodes.Count; i++)
+        //        {
+        //            UnityEditor.Handles.Label(allNodes[i].cornerPosition, "" + allNodes[i].density);
+        //        }
+        //    }
+        //}
 
-        if (allMetaball2Ds != null)
-        {
-            for (int i = 0; i < allMetaball2Ds.Count; i++)
-            {
-                Gizmos.DrawSphere(allMetaball2Ds[i].pos, 0.05f * allMetaball2Ds[i].radius);
-            }
-        }
+        //if (allMetaball2Ds != null)
+        //{
+        //    for (int i = 0; i < allMetaball2Ds.Count; i++)
+        //    {
+        //        Gizmos.DrawSphere(allMetaball2Ds[i].pos, 0.05f * allMetaball2Ds[i].radius);
+        //    }
+        //}
     }
 
     // Update is called once per frame
@@ -496,6 +507,8 @@ public class MarchingSquaresGrid : MonoBehaviour
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
 
+        mesh.RecalculateNormals();
+
         //GetComponent<Renderer>().material = waterMat;
     }
 
@@ -513,13 +526,24 @@ public class MarchingSquaresGrid : MonoBehaviour
     Vector3 Interpolation(Vector3 v1, Vector3 v2, float i1, float i2)
     {
         Vector3 finalPoint;
-
+        float length = Vector3.Distance(v1, v2);
         if (interpolation)
-            finalPoint = v1 + (1 - i1) * (v2 - v1) / (i2 - i1);
+            finalPoint = v1 + Vector3.ClampMagnitude((1 - i1) * (v2 - v1) / (i2 - i1), length);
         else
             finalPoint = Vector3.Lerp(v1, v2, 0.5f);
 
         return finalPoint;
+    }
+
+    void ComputeShaderPhysics()
+    {
+        myCS.SetInt("numBalls", allMetaball2Ds.Count);
+        myCS.SetBuffer(myCS.FindKernel("UpdatePhysics"), "allMetaballs", metaballBuffer);
+        myCS.SetVector("gravity", metaballGravity);
+        myCS.SetFloat("deltaTime", Time.deltaTime);
+        myCS.SetVector("movementSinceLastFrame", movementSinceLastFrame);
+
+        myCS.Dispatch(myCS.FindKernel("UpdatePhysics"), allMetaball2Ds.Count, 1, 1);
     }
 
     void ApplyComputeShader()
@@ -579,19 +603,19 @@ public class MarchingSquaresGrid : MonoBehaviour
         {
             if (animatedTime > 0)
             {
+
                 if (marchingSquaresEnabled)
                 {
-                    //for (int i = 0; i < allMetaball2Ds.Count; i++)
-                    //{
-                    //    MoveMetaball(i);
-                    //}
+                    //Moves all metaballs using the GPU                    
+                    ComputeShaderPhysics();
 
-                    //AssignDensities();
+                    //Gets the data from the Compute Shader which was dispatched in the previous tick
+                    ReturnDataFromGPU();
 
+                    //Calculates densities for every node of every cell using the GPU
                     ApplyComputeShader();
-                    yield return new WaitForSeconds(timeDelay);
 
-                    
+                    yield return new WaitForSeconds(timeDelay);                    
                 }
 
                 animatedTime -= Time.deltaTime;
@@ -608,7 +632,6 @@ public class MarchingSquaresGrid : MonoBehaviour
             
 
             yield return delay;
-            ReturnDataFromGPU();
         }
     }
 

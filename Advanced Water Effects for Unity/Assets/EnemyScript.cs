@@ -38,9 +38,12 @@ public class EnemyScript : MonoBehaviour {
     protected virtual void FixedUpdate()
     {
         Vector3 dir = (PlayerScript.singleton.transform.position - transform.position);
-        rb.AddForce(dir.normalized * speed * 0.02f, ForceMode.VelocityChange);
-
         dir.y = 0;
+        dir = dir.normalized;
+
+        float prevY = rb.velocity.y;
+        rb.velocity = dir * speed * 0.25f;
+        rb.velocity = new Vector3(rb.velocity.x, prevY, rb.velocity.z);
 
         rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.LookRotation(dir), 3 * Time.deltaTime);
     }
@@ -51,13 +54,25 @@ public class EnemyScript : MonoBehaviour {
         //anim.SetFloat("Hit", anim.GetFloat("Hit") + dmg * 0.1f);
         anim.SetLayerWeight(1, anim.GetLayerWeight(1) + dmg * 0.1f);
         hissSource.volume += dmg * Time.deltaTime;
+
+        transform.localScale -= Vector3.one * 0.05f;
+
+        if(transform.localScale.x<0.15f)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void OnCollisionEnter(Collision col)
     {
-        if(col.gameObject.GetComponent<MetaballScript>())
+        MetaballScript m = col.gameObject.GetComponent<MetaballScript>();
+
+        if (m)
         {
-            Hurt(5);
+            if (m.CanHit())
+            {
+                Hurt(5);
+            }
         }
     }
 }
