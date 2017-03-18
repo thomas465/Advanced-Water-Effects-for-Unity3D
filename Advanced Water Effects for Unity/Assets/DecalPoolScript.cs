@@ -13,7 +13,7 @@ public class DecalPoolScript : MonoBehaviour
 
     //Consts
     static float baseGridSize = 1.25f;
-    static int baseGridMaxAmount = 24, baseGridRes = 28;
+    static int baseGridMaxAmount = 24, baseGridRes = 32;
 
     //Pool of nodes
     public static List<MarchingSquaresGrid.CellCorner> allCellCorners;

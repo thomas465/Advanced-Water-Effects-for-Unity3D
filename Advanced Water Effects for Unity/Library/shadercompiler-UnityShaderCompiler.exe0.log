@@ -1,55 +1,132 @@
 Base path: C:/Program Files/Unity5.5.0f3/Editor/Data
 Cmd: getPlatforms
 Cmd: compileCompute
-  error: 1 plat 4 at MarchingSquaresShader.compute(72): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(74): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(84): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(86): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(96): implicit truncation of vector type
-  api=4 insize=2882 outsize=1069 ok=1
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(87): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(89): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(101): implicit truncation of vector type
+  api=4 insize=3029 outsize=1913 ok=1
 Cmd: compileCompute
-  error: 1 plat 4 at MarchingSquaresShader.compute(72): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(74): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(84): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(86): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(96): implicit truncation of vector type
-  api=4 insize=2910 outsize=1881 ok=1
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 2 plat 4 at MarchingSquaresShader.compute(92): race condition writing to shared resource detected, consider making this write conditional.
+  error: 1 plat 4 at MarchingSquaresShader.compute(92): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(94): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(106): implicit truncation of vector type
+  error: 2 plat 4 at MarchingSquaresShader.compute(115): error location reached from this location
+  api=4 insize=3075 outsize=0 ok=0
 Cmd: compileCompute
-  api=4 insize=23942 outsize=2721 ok=1
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 2 plat 4 at MarchingSquaresShader.compute(92): race condition writing to shared resource detected, consider making this write conditional.
+  error: 1 plat 4 at MarchingSquaresShader.compute(92): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(94): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(106): implicit truncation of vector type
+  error: 2 plat 4 at MarchingSquaresShader.compute(115): error location reached from this location
+  api=4 insize=3075 outsize=0 ok=0
 Cmd: compileCompute
-  error: 1 plat 4 at MarchingSquaresShader.compute(72): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(74): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(84): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(86): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(98): implicit truncation of vector type
-  api=4 insize=2943 outsize=1913 ok=1
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(93): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(107): implicit truncation of vector type
+  api=4 insize=3186 outsize=2257 ok=1
 Cmd: compileCompute
-  error: 1 plat 4 at MarchingSquaresShader.compute(72): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(74): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(84): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(86): implicit truncation of vector type
-  error: 2 plat 4 at MarchingSquaresShader.compute(90): syntax error: unexpected token 'f'
-  error: 1 plat 4 at MarchingSquaresShader.compute(98): implicit truncation of vector type
-  api=4 insize=2942 outsize=0 ok=0
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(93): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(107): implicit truncation of vector type
+  api=4 insize=3187 outsize=2257 ok=1
 Cmd: compileCompute
-  error: 1 plat 4 at MarchingSquaresShader.compute(72): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(74): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(84): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(86): implicit truncation of vector type
-  error: 2 plat 4 at MarchingSquaresShader.compute(90): syntax error: unexpected token 'f'
-  error: 1 plat 4 at MarchingSquaresShader.compute(98): implicit truncation of vector type
-  api=4 insize=2942 outsize=0 ok=0
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3247 outsize=2313 ok=1
 Cmd: compileCompute
-  error: 1 plat 4 at MarchingSquaresShader.compute(72): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(74): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(84): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(86): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(98): implicit truncation of vector type
-  api=4 insize=2944 outsize=1913 ok=1
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3248 outsize=2313 ok=1
 Cmd: compileCompute
-  error: 1 plat 4 at MarchingSquaresShader.compute(72): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(74): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(84): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(86): implicit truncation of vector type
-  error: 1 plat 4 at MarchingSquaresShader.compute(98): implicit truncation of vector type
-  api=4 insize=2943 outsize=1913 ok=1
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3248 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3249 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3249 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3253 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3253 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3254 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3253 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3254 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3253 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3257 outsize=2309 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(95): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(97): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  api=4 insize=3258 outsize=2309 ok=1

@@ -54,7 +54,10 @@ void AssignDensityToCorner(inout Corner c, inout RWStructuredBuffer<Metaball> me
 		float distSq = length(c.pos - m.pos);
 		distSq = distSq * distSq;
 
-		c.density += (m.radius * m.radius) / (distSq);
+		float newDens = (m.radius * m.radius) / (distSq);
+		c.density += newDens;
+		
+		//metaballs[i].velocity *= 1 - (c.density * 0.1f);
 	}
 }
 
@@ -79,7 +82,15 @@ void MoveAllMetaballs()
 
 void MoveMetaball(int i)
 {
-	float gravityIntensity = 0.95f;
+	float gravityIntensity = 0.00000195f;
+	float multiplier = 0.09215f;
+
+	for(int m=0; m<numBalls; m++)
+	{
+		gravityIntensity += length(allMetaballs[i].pos - allMetaballs[m].pos) * multiplier;
+	}
+
+	gravityIntensity = clamp(gravityIntensity, 0.001f, 29.0f);
 
 		allMetaballs[i].pos += movementSinceLastFrame;
 
