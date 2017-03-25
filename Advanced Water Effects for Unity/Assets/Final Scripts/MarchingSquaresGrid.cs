@@ -473,6 +473,10 @@ public class MarchingSquaresGrid : MonoBehaviour
         {
             debug++;
         }
+
+        movementSinceLastFrame += transform.position - prevPos;
+
+        prevPos = transform.position;
     }
 
     void Triangulate()
@@ -558,8 +562,9 @@ public class MarchingSquaresGrid : MonoBehaviour
 
             myCS.SetVector("gravity", metaballGravity);
 
-            movementSinceLastFrame = transform.position - prevPos;
+            
             myCS.SetVector("movementSinceLastFrame", movementSinceLastFrame);
+            movementSinceLastFrame = Vector3.zero;
 
             myCS.SetBuffer(myCS.FindKernel("GetDensities"), "allCorners", cellCornerBuffer);
             myCS.SetBuffer(myCS.FindKernel("GetDensities"), "allMetaballs", metaballBuffer);
@@ -626,7 +631,7 @@ public class MarchingSquaresGrid : MonoBehaviour
             }
 
 
-            prevPos = transform.position;
+
 
             Triangulate();
             

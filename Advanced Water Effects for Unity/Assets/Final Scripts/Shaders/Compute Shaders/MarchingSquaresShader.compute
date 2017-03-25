@@ -82,12 +82,15 @@ void MoveAllMetaballs()
 
 void MoveMetaball(int i)
 {
-	float gravityIntensity = 0.00000195f;
-	float multiplier = 0.09215f;
+	float gravityIntensity = 1.1f;
 
+	float multiplier = 0.95f;
+	float threshold = 0.4f;
+
+	//This performs a density calculation which affects how quickly this particular metaball flows down the surface
 	for(int m=0; m<numBalls; m++)
 	{
-		gravityIntensity += length(allMetaballs[i].pos - allMetaballs[m].pos) * multiplier;
+		gravityIntensity -= (length(allMetaballs[i].pos - allMetaballs[m].pos) - threshold) * multiplier;
 	}
 
 	gravityIntensity = clamp(gravityIntensity, 0.001f, 29.0f);

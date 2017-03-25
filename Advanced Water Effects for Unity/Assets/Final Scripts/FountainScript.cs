@@ -7,7 +7,7 @@ public class FountainScript : MonoBehaviour {
     public MetaballPoolScript myMetaballPool;
 
     public float metaballMinSize = 0.2f, metaballMaxSize = 0.5f, metaballMinSpeed = 4, metaballMaxSpeed = 8, metaballLife = 2;
-    public float directionRandomMultiplier = 2;
+    public float directionRandomMultiplier = 0.5f;
 
     public float rateOfFireMin = 0.05f, rateOfFireMax = 0.2f;
 
