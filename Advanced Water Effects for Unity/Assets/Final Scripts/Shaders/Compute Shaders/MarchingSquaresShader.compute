@@ -80,6 +80,13 @@ void MoveAllMetaballs()
 	}
 }
 
+void JoinWithOtherMetaballs(inout Metaball me, int curIndex)
+{
+	float3 direction = normalize(allMetaballs[curIndex].pos - me.pos);
+
+	me.velocity += direction * deltaTime * 0.000000001f;
+}
+
 void MoveMetaball(int i)
 {
 	float gravityIntensity = 1.1f;
@@ -91,6 +98,8 @@ void MoveMetaball(int i)
 	for(int m=0; m<numBalls; m++)
 	{
 		gravityIntensity -= (length(allMetaballs[i].pos - allMetaballs[m].pos) - threshold) * multiplier;
+
+		//JoinWithOtherMetaballs(allMetaballs[i], m);
 	}
 
 	gravityIntensity = clamp(gravityIntensity, 0.001f, 29.0f);
@@ -103,6 +112,7 @@ void MoveMetaball(int i)
 		//Apply drag
 		allMetaballs[i].velocity *= 1 - (deltaTime*6.0f);
 }
+
 
 [numthreads(8,8,1)]
 void GetDensities (uint3 id : SV_DispatchThreadID)

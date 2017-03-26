@@ -75,4 +75,9 @@ public class EnemyScript : MonoBehaviour {
             }
         }
     }
+
+    protected virtual void OnDestroy()
+    {
+        EnemySpawnerScript.EnemyHasDied();
+    }
 }
