@@ -17,6 +17,8 @@ public class FountainScript : MonoBehaviour {
 
     public Rigidbody attachedToThisRB;
 
+    float flowForSeconds = 0;
+
     // Use this for initialization
     protected virtual void Start()
     {
@@ -33,6 +35,17 @@ public class FountainScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	protected virtual void Update () {
+
+        if(flowForSeconds>0)
+        {
+            flowForSeconds -= Time.deltaTime;
+            active = true;
+
+            if(flowForSeconds<=0)
+            {
+                active = false;
+            }
+        }
 
         if (active)
         {
@@ -58,4 +71,9 @@ public class FountainScript : MonoBehaviour {
             }
         }
 	}
+
+    public virtual void FlowForSeconds(float _time)
+    {
+        flowForSeconds = _time;
+    }
 }

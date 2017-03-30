@@ -13,6 +13,8 @@ public class EnemyScript : MonoBehaviour {
     AudioSource hissSource;
     public AudioClip hissSnd, deathSnd;
 
+    FountainScript myDamageEffect;
+
     // Use this for initialization
     protected virtual void Start() {
         anim = GetComponent<Animator>();
@@ -24,6 +26,8 @@ public class EnemyScript : MonoBehaviour {
         hissSource.loop = true;
 
         hissSource.Play();
+
+        myDamageEffect = GetComponentInChildren<FountainScript>();
     }
 
     // Update is called once per frame
@@ -48,7 +52,7 @@ public class EnemyScript : MonoBehaviour {
         rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.LookRotation(dir), 3 * Time.deltaTime);
     }
 
-    protected void Hurt(float dmg)
+    protected void Hurt(float dmg, Collision col = null)
     {
         hp -= dmg;
         //anim.SetFloat("Hit", anim.GetFloat("Hit") + dmg * 0.1f);
@@ -56,6 +60,12 @@ public class EnemyScript : MonoBehaviour {
         hissSource.volume += dmg * Time.deltaTime;
 
         transform.localScale -= Vector3.one * 0.05f;
+
+        if(col!=null)
+        {
+            myDamageEffect.transform.position = col.contacts[0].point;
+            myDamageEffect.FlowForSeconds(0.6f);
+        }
 
         if(transform.localScale.x<0.15f)
         {
@@ -71,7 +81,7 @@ public class EnemyScript : MonoBehaviour {
         {
             if (m.CanHit())
             {
-                Hurt(5);
+                Hurt(5, col);
             }
         }
     }

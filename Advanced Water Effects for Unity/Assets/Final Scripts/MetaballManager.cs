@@ -505,9 +505,15 @@ public class MetaballManager : MonoBehaviour
         while (true)
         {
             //Skips all of these calculations if the level of detail is low enough
-            if (currentDetailLevel <= 0)
+            while (currentDetailLevel <= 0)
             {
-                yield return new WaitForSeconds(1);
+                break;
+            }
+
+            //Skips all of these calculations if there are no metaballs
+            while(allMetaballs.Count==0)
+            {
+                break;
             }
 
             //Pauses Unity if the frame rate is unreasonably low

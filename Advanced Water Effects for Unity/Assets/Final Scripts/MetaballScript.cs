@@ -78,7 +78,7 @@ public class MetaballScript : MonoBehaviour
 
     public bool CanHit()
     {
-        return GetVelocity().magnitude>4;
+        return GetVelocity().magnitude>4 && gameObject.layer==4;
     }
 
     /// <summary>
@@ -144,7 +144,7 @@ public class MetaballScript : MonoBehaviour
     /// <param name="col"></param>
     protected virtual void OnCollisionEnter(Collision col)
     {
-        if (!bounced && col.gameObject.layer!=10 && col.gameObject.layer != 4)
+        if (!bounced && col.gameObject.layer!=10 && col.gameObject.layer != 4 && col.gameObject.layer!=LayerMask.NameToLayer("Mud"))
         {
             //CreateMarchingSquaresNodesOnSurface(col);
 
