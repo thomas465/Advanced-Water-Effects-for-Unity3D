@@ -49,6 +49,7 @@ ModelImporter:
     7400000: Default Take
     7400002: Approach
     7400004: Die
+    7400006: Hurt
     9500000: //RootNode
     13700000: Cube
   materials:
@@ -221,6 +222,74 @@ ModelImporter:
       hasAdditiveReferencePose: 0
       loopTime: 0
       loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Body
+        weight: 1
+      - path: Armature/Body/Arm_l
+        weight: 1
+      - path: Armature/Body/Arm_l/Arm_l_001
+        weight: 1
+      - path: Armature/Body/Arm_l/Arm_l_001/Arm_l_002
+        weight: 1
+      - path: Armature/Body/Arm_l/Arm_l_001/Arm_l_002/fingers_l
+        weight: 1
+      - path: Armature/Body/Arm_l/Arm_l_001/Arm_l_002/thumb_l
+        weight: 1
+      - path: Armature/Body/Arm_r
+        weight: 1
+      - path: Armature/Body/Arm_r/Arm_r_001
+        weight: 1
+      - path: Armature/Body/Arm_r/Arm_r_001/Arm_r_002
+        weight: 1
+      - path: Armature/Body/Arm_r/Arm_r_001/Arm_r_002/fingers_r
+        weight: 1
+      - path: Armature/Body/Arm_r/Arm_r_001/Arm_r_002/thumb_r
+        weight: 1
+      - path: Armature/Body/Head
+        weight: 1
+      - path: Armature/Body/Head/Brows_r
+        weight: 1
+      - path: Armature/Body/Head/Brows_r/Brows_r_001
+        weight: 1
+      - path: Armature/Body/Nose
+        weight: 1
+      - path: Camera
+        weight: 1
+      - path: Cube
+        weight: 1
+      - path: Lamp
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Hurt
+      takeName: Die
+      firstFrame: 15.6
+      lastFrame: 30.4
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
       loopBlendOrientation: 0
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0

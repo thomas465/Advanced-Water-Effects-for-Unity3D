@@ -23,7 +23,7 @@ public class MetaballPoolScript : MonoBehaviour {
         {
             GameObject nM = GameObject.Instantiate(metaballPrefab);
             nM.SetActive(false);
-
+            //nM.hideFlags = HideFlags.HideInHierarchy;
             myMetaballs.Add(nM.GetComponent<MetaballScript>());
             //myMetaballs[myMetaballs.Count - 1].myManager = myManager;
         }
@@ -49,7 +49,7 @@ public class MetaballPoolScript : MonoBehaviour {
             newMetaball.myInfo.life = metaballLife;
 
             if(manager)
-                newMetaball.transform.localScale = Vector3.one * (manager.GetDesiredMetaballSize());
+                newMetaball.transform.localScale = Vector3.one * newMetaball.myInfo.radius * (manager.GetDesiredMetaballSize());
             else
                 newMetaball.transform.localScale = Vector3.one * originalMetaballRadius;
 

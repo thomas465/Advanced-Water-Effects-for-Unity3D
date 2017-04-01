@@ -37,11 +37,14 @@ public class MetaballScript : MonoBehaviour
         {
             Debug.LogError("Metaball has no manager!");
         }
+
+        //hideFlags = HideFlags.HideInHierarchy;
     }
 
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        
     }
 
     // Update is called once per frame

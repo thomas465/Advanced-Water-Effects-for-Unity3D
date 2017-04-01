@@ -72,8 +72,27 @@ public class FountainScript : MonoBehaviour {
         }
 	}
 
+    public void Burst(int amount)
+    {
+        for(int i=0; i<amount; i++)
+        {
+            Vector3 dir = transform.up;
+
+            float randomSize = directionRandomMultiplier;
+
+            dir += transform.right * Random.Range(-randomSize, randomSize);
+            dir += transform.forward * Random.Range(-randomSize, randomSize);
+
+            myMetaballPool.FireMetaball(myManager, transform.position, dir, Random.Range(metaballMinSpeed, metaballMaxSpeed), Random.Range(metaballMinSize, metaballMaxSize), metaballLife);
+
+            timer = Random.Range(rateOfFireMin, rateOfFireMax);
+        }
+    }
+
     public virtual void FlowForSeconds(float _time)
     {
+        timer = 0;
+        active = true;
         flowForSeconds = _time;
     }
 }

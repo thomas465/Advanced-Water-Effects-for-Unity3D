@@ -11,6 +11,9 @@ public class MetaballManager : MonoBehaviour
     MeshRenderer myRenderer;
     Mesh myMesh;
 
+    //Movement
+    Vector3 movementSinceLastTick = Vector3.zero;
+
     //ComputeBuffer cellPositions, metaballPositions, metaballPowers;
     
     public ComputeShader myComputeShader;
@@ -213,12 +216,14 @@ public class MetaballManager : MonoBehaviour
 
     [Header("Settings")]
     public bool calculateNormals = true;
-    [Tooltip("VERY SLOW")]
+    [Header("VERY SLOW")]
     public bool calculateUVs = false;
 
     [Header("Level of Detail Settings")]
     Transform mainCamera;
     float tickRate = 0.03f;
+    [Range(0,1)]
+    public float priority = 1;
     public float currentDetailLevel = 1;
     public float halfDetailDistance = 45;
     public float hideDistance = 125;
@@ -266,6 +271,7 @@ public class MetaballManager : MonoBehaviour
 
         triangleList = new List<int>();
         vertList = new List<Vector3>();
+        uvList = new List<Vector2>();
 
         int sizeOfCornerStruct = (sizeof(float) * 3) + sizeof(float);
 
@@ -286,7 +292,8 @@ public class MetaballManager : MonoBehaviour
 
     public float GetDesiredMetaballSize()
     {
-        return cellVolume * 10;
+        return cellVolume * 29000;
+        //return cellVolume * 0.0001f;
     }
 
     void OnDrawGizmos()
@@ -507,12 +514,14 @@ public class MetaballManager : MonoBehaviour
             //Skips all of these calculations if the level of detail is low enough
             while (currentDetailLevel <= 0)
             {
+                myMesh.Clear();
                 break;
             }
 
             //Skips all of these calculations if there are no metaballs
             while(allMetaballs.Count==0)
             {
+                myMesh.Clear();
                 break;
             }
 
@@ -520,14 +529,6 @@ public class MetaballManager : MonoBehaviour
             if (Time.deltaTime > 0.15f && Time.timeSinceLevelLoad > 1)
             {
                 Debug.Break();
-            }
-
-            //Moves the cells with the Manager's gameobject
-            if (transform.position != prevPos)
-            {
-                Vector3 change = transform.position - prevPos;
-                MoveAllThings(change);
-                prevPos = transform.position;
             }
 
             //Keeps the manager's rotation the same no matter what happens in the scene
@@ -539,8 +540,7 @@ public class MetaballManager : MonoBehaviour
                 RefreshGrid();
             }
 
-            
-            //Fill in density values
+            //Dispatches a Compute Shader kernel which will return data in the next tick
             GetDensitiesFromGPU();
 
             //Clear the mesh from the previous tick
@@ -553,7 +553,14 @@ public class MetaballManager : MonoBehaviour
                 //TriangulateCell(newCorners);
             }
 
-            
+            //Moves the cells with the Manager's gameobject
+            if (movementSinceLastTick != Vector3.zero)
+            {
+                Debug.Log(gameObject.name + "'s movement since LF: " + movementSinceLastTick);
+                Debug.DrawLine(transform.position, transform.position - movementSinceLastTick.normalized, Color.red, 0.1f);
+                MoveAllThings(movementSinceLastTick);
+                movementSinceLastTick = Vector3.zero;
+            }
 
             if (vertList.Count == triangleList.Count)
             {
@@ -567,16 +574,19 @@ public class MetaballManager : MonoBehaviour
             }
 
             //This works well but is very slow
-            if (calculateUVs)
+            if (calculateUVs && myMesh.vertexCount>3)
             {
-                //myMesh.SetUVs(0, UnityEditor.Unwrapping.GeneratePerTriangleUV(myMesh));
+                uvList.Clear();
+                myMesh.SetUVs(0, uvList);
             }
 
             vertList.Clear();
             triangleList.Clear();
             
             yield return new WaitForSeconds(tickRate);
+            //Returns data from the Compute Shader, dispatched last tick
             ReturnDataFromGPUBuffer();
+
         }
     }
 
@@ -641,8 +651,15 @@ public class MetaballManager : MonoBehaviour
         //myComputeShader.Dispatch(myComputeShader.FindKernel("GetVertices"), Cell)
     }
 
+    void Update()
+    {
+
+    }
+
     void FixedUpdate()
     {
+        movementSinceLastTick += (transform.position - prevPos);
+        prevPos = transform.position;
         //PositionMetaballs();
     }
 
@@ -924,7 +941,7 @@ public class MetaballManager : MonoBehaviour
             distance = Vector3.Distance(transform.position, mainCamera.position);
             scaledDistance = distance / hideDistance;
 
-            currentDetailLevel = Mathf.Lerp(1, 0, scaledDistance);
+            currentDetailLevel = Mathf.Lerp(1, 0, scaledDistance) * priority;
 
             tickRate = Mathf.Lerp(0.015f, 0.2f, scaledDistance * 2);
 

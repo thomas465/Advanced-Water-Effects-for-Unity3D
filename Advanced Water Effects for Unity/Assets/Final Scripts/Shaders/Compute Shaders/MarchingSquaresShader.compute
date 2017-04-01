@@ -89,7 +89,7 @@ void JoinWithOtherMetaballs(inout Metaball me, int curIndex)
 
 void MoveMetaball(int i)
 {
-	float gravityIntensity = 1.1f;
+	float gravityIntensity = 0.61f;
 
 	float multiplier = 0.95f;
 	float threshold = 0.4f;

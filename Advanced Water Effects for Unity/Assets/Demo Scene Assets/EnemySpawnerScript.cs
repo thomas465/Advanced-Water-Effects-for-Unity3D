@@ -64,6 +64,7 @@ public class EnemySpawnerScript : MonoBehaviour {
         {
             waveDisplayText.text = "Wave complete!!";
         }
+
         Debug.Log("Wave complete!");
         waveStartDelay = 3;
     }

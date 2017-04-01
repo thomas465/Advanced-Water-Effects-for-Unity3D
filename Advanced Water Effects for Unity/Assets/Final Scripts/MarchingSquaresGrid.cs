@@ -146,7 +146,7 @@ public class MarchingSquaresGrid : MonoBehaviour
             meshRenderer.material = newMaterial;
         }
 
-        transform.position = pos + (forward * 0.02f);
+        transform.position = pos + (forward * 0.025f);
         transform.rotation = Quaternion.LookRotation(forward);
         transform.SetParent(surface.transform);
 
@@ -292,7 +292,7 @@ public class MarchingSquaresGrid : MonoBehaviour
 
     public void BurstMetaballs(float speed, Vector3 pos, float num = 6, float size = 1)
     {
-        int maxBalls = 48;
+        int maxBalls = 32;
         float ballSize = 0.35f * size;
 
         speed = speed * 3.5f;
@@ -314,6 +314,11 @@ public class MarchingSquaresGrid : MonoBehaviour
                 newMetaball.radius = Mathf.Clamp(ballSize / (newMetaball.velocity.magnitude/ballSize), ballSize*0.2f, ballSize * 0.85f);
 
                 allMetaball2Ds.Add(newMetaball);
+                Debug.DrawLine(newMetaball.pos, newMetaball.pos + Vector3.up, Color.red, 0.1f);
+            }
+            else
+            {
+                Debug.DrawLine(pos, pos + Vector3.up * 100, Color.magenta, 0.1f);
             }
         }
 
@@ -324,6 +329,27 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         metaballBuffer = new ComputeBuffer(allMetaball2Ds.Count, sizeOfMetaball);
         metaballBuffer.SetData(allMetaball2Ds.ToArray());
+    }
+
+    Vector3 FindRaycastStart(Vector3 pos, Vector3 forward, float distanceForward)
+    {
+        RaycastHit rH;
+
+        //return pos + transform.forward * 0.1f;
+
+        //Debug.DrawLine(pos, pos + transform.forward * distanceForward, Color.green, 1);
+
+        if (Physics.Raycast(pos + transform.forward*0.1f, transform.forward, out rH, distanceForward, LayerMask.GetMask("Default")))
+        {
+            Debug.DrawLine(pos, rH.point, Color.red, 4);
+            //Debug.Break();
+            
+            return rH.point - transform.forward * 0.1f;
+        }
+        else
+        {
+            return pos + transform.forward * 0.1f;
+        }
     }
 
     /// <summary>
@@ -339,22 +365,18 @@ public class MarchingSquaresGrid : MonoBehaviour
         allCells[i].cornerDensities = new float[4];
         allCells[i].cornerPositions = new Vector3[4];
 
-        //If cell starts at centre
-        //allCells[i].cornerPositions[0] = relativePos + (transform.up * halfCellSize) + (transform.right * halfCellSize);
-        //allCells[i].cornerPositions[1] = relativePos + (transform.up * halfCellSize) - (transform.right * halfCellSize);
-        //allCells[i].cornerPositions[2] = relativePos - (transform.up * halfCellSize) - (transform.right * halfCellSize);
-        //allCells[i].cornerPositions[3] = relativePos - (transform.up * halfCellSize) + (transform.right * halfCellSize);
-
         RaycastHit rH;
 
         //Debug.DrawLine(pos, pos - transform.forward, Color.magenta, 2);
+        float raycastDistance = 1;
+        Vector3 startPos = FindRaycastStart(pos, transform.forward, raycastDistance);
 
-        if(Physics.Raycast(pos + (transform.forward*0.052f), -transform.forward, out rH, 0.41f, LayerMask.GetMask("Default")))
+        if(Physics.Raycast(startPos, -transform.forward, out rH, raycastDistance, LayerMask.GetMask("Default")))
         {
-            if (Vector3.Dot(transform.forward, rH.normal) > 0f)
+            if (Vector3.Dot(transform.forward, rH.normal) > 0.15f)
             {
-                Debug.DrawLine(pos, pos + (transform.forward * 0.012f), Color.green, 5);
-                pos = rH.point + (rH.normal * 0.012f);
+                //Debug.DrawLine(pos, pos + (transform.forward * 0.12f), Color.green, 5);
+                pos = rH.point + (rH.normal * 0.02f);
             }
             else
             {
@@ -366,6 +388,11 @@ public class MarchingSquaresGrid : MonoBehaviour
         {
             //No cell here
             allCells[i].disabled = true;
+        }
+
+        if(allCells[i].disabled)
+        {
+
         }
 
         //If cell starts at bottom left corner
@@ -606,14 +633,14 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         while (true)
         {
+            //Moves the grid + metaballs using the GPU                    
+            ComputeShaderPhysics();
+
             if (animatedTime > 0)
             {
 
                 if (marchingSquaresEnabled)
                 {
-                    //Moves all metaballs using the GPU                    
-                    ComputeShaderPhysics();
-
                     //Gets the data from the Compute Shader which was dispatched in the previous tick
                     ReturnDataFromGPU();
 
