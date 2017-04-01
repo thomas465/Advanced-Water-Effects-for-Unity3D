@@ -13,7 +13,7 @@ public class DecalPoolScript : MonoBehaviour
 
     //Consts
     static float baseGridSize = 1.25f;
-    static int baseGridMaxAmount = 24, baseGridRes = 32;
+    static int baseGridMaxAmount = 28, baseGridRes = 32;
 
     //Pool of nodes
     public static List<MarchingSquaresGrid.CellCorner> allCellCorners;
@@ -42,6 +42,7 @@ public class DecalPoolScript : MonoBehaviour
 
             DontDestroyOnLoad(gridPool[i].gameObject);
             gridPool[i].gameObject.SetActive(false);
+            gridPool[i].hideFlags = HideFlags.HideInHierarchy;
         }
     }
 
@@ -88,6 +89,7 @@ public class DecalPoolScript : MonoBehaviour
                 if (dist >= burstThreshold)
                 {
                     //Debug.Log("Bursting from old one");
+                    Debug.DrawLine(pos, gridPool[i].transform.position, Color.magenta, 2);
                     gridPool[i].BurstMetaballs(1, pos, 1, metaballSize);
                 }
 

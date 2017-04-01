@@ -577,6 +577,7 @@ public class MetaballManager : MonoBehaviour
             if (calculateUVs && myMesh.vertexCount>3)
             {
                 uvList.Clear();
+                //uvList.AddRange(UnityEditor.Unwrapping.GeneratePerTriangleUV(myMesh));
                 myMesh.SetUVs(0, uvList);
             }
 
