@@ -14,6 +14,7 @@ public class MudMonsterScript : EnemyScript
         StartCoroutine("LeaveTrail");
     }
 
+    //This creates a Marching Squares decal directly - no metaballs required
     IEnumerator LeaveTrail()
     {
         while (true)
@@ -28,7 +29,7 @@ public class MudMonsterScript : EnemyScript
                 }
             }
 
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.05f);
         }
     }
 }

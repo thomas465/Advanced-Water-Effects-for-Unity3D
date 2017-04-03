@@ -49,7 +49,7 @@ public class MetaballPoolScript : MonoBehaviour {
             newMetaball.myInfo.life = metaballLife;
 
             if(manager)
-                newMetaball.transform.localScale = Vector3.one * newMetaball.myInfo.radius * (manager.GetDesiredMetaballSize());
+                newMetaball.transform.localScale = Vector3.one * originalMetaballRadius * (manager.GetDesiredMetaballSize());
             else
                 newMetaball.transform.localScale = Vector3.one * originalMetaballRadius;
 
@@ -62,6 +62,7 @@ public class MetaballPoolScript : MonoBehaviour {
         }
     }
 
+    //Finds an inactive metaball and returns it. Will return null if there are no available metaballs.
     MetaballScript FindValidMetaball()
     {
         MetaballScript result = null;
@@ -76,9 +77,4 @@ public class MetaballPoolScript : MonoBehaviour {
 
         return result;
     }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

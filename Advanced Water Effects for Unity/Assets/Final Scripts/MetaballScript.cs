@@ -107,7 +107,7 @@ public class MetaballScript : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    //Previously, the decal grids were generated here
+    //Previously, the decal grids were generated here but this functionality has since moved to DecalPoolScript.
     //void CreateMarchingSquaresNodesOnSurface(Collision col)
     //{
     //    transform.rotation = Quaternion.LookRotation(-col.contacts[0].normal);

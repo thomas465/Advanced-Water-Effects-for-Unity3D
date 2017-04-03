@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//This script simply moves the attached object back and forth using Mathf.Sin
 public class SineCupScript : MonoBehaviour
 {
 
@@ -14,10 +15,15 @@ public class SineCupScript : MonoBehaviour
         pos = transform.position;
     }
 
-    // Update is called once per frame
+
+    /// <summary>
+    /// This moves the cup back and forth while slowly increasing the speed so that a more dramatic effect happens to the water inside.
+    /// </summary>
     void FixedUpdate()
     {
         pos.x = Mathf.Sin(Time.timeSinceLevelLoad * sineSpeed) * sineLength;
         transform.position = pos;
+
+        sineSpeed += 0.01f * Time.deltaTime;
     }
 }

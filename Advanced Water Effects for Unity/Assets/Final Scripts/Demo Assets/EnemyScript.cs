@@ -43,6 +43,7 @@ public class EnemyScript : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
+        //Gradually adjusts animation layers back to default
         float newWeight = Mathf.Lerp(anim.GetLayerWeight(1), 0, 0.1f * Time.deltaTime);
         anim.SetLayerWeight(1, newWeight);
 
@@ -57,11 +58,17 @@ public class EnemyScript : MonoBehaviour
 
         float prevY = rb.velocity.y;
         rb.velocity = dir * speed * 0.25f;
-        rb.velocity = new Vector3(rb.velocity.x, prevY, rb.velocity.z);
 
+        //Moves and rotates the enemy towards the player
+        rb.velocity = new Vector3(rb.velocity.x, prevY, rb.velocity.z);
         rb.rotation = Quaternion.Lerp(rb.rotation, Quaternion.LookRotation(dir), 3 * Time.deltaTime);
     }
 
+    /// <summary>
+    /// Takes damage, gets smaller, changes animation, plays a sound and checks to see if the monster is now dead.
+    /// </summary>
+    /// <param name="dmg"></param>
+    /// <param name="col"></param>
     protected void Hurt(float dmg, Collision col = null)
     {
         hp -= dmg;
@@ -78,34 +85,64 @@ public class EnemyScript : MonoBehaviour
             myDamageEffect.transform.rotation = Quaternion.LookRotation(col.contacts[0].normal);
         }
 
+        //If the monster is too small to carry on, it dies here leaving a metaball explosion and
+        //gives the player 100 points using ScoreManagerScript.
         if (transform.localScale.x < deathThreshold || hp < 1)
         {
-            myDamageEffect.Burst(20);
-            Destroy(gameObject);
+            if (gameObject.activeInHierarchy)
+            {
+                myDamageEffect.Burst(20);
+                ScoreManagerScript.singleton.GiveScore(100, transform.position);
+                gameObject.SetActive(false);
+                Destroy(gameObject);
+            }
         }
 
+        //Tries to prevent the monster from moving upwards due to the collision
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
     }
 
+    //Detects if the collider is a metaball and if so, takes damage.
     void OnCollisionStay(Collision col)
     {
         MetaballScript m = col.gameObject.GetComponent<MetaballScript>();
 
         if (m)
         {
+            //If the metaball is currently going quickly through the air, take lots of damage
             if (m.CanHit())
             {
                 Hurt(5, col);
             }
             else
             {
+                //If the metaball is dormant, the monster takes some damage for each frame it is inside it
                 Hurt(0.25f * Time.deltaTime, col);
             }
+        }
+        else
+        {
+
+        }
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        PlayerScript p = col.gameObject.GetComponent<PlayerScript>();
+
+        if (p)
+        {
+            HealthbarScript.singleton.TakeDamage(15);
+            p.transform.Translate(Vector3.up * 0.1f);
+
+            float force = 5;
+            p.GetComponent<Rigidbody>().AddForce(transform.forward * force + (Vector3.up * force * 0.5f), ForceMode.VelocityChange);
         }
     }
 
     protected virtual void OnDestroy()
     {
+        //Lets the wave manager know that an enemy has died.
         EnemySpawnerScript.EnemyHasDied();
     }
 }

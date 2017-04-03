@@ -28,7 +28,7 @@ public class MetaballManager : MonoBehaviour
     
     int[] edgeTable;
     int[,] triTable;
-    int[,] edgeConnections;
+    //int[,] edgeConnections;
 
     [HideInInspector]
     List<Vector3> vertList;
@@ -257,13 +257,16 @@ public class MetaballManager : MonoBehaviour
         RefreshGrid();
     }
 
+    /// <summary>
+    /// Initialises lists and buffers and starts some coroutines
+    /// </summary>
     void Start()
     {
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
 
         FillTriTable();
         FillEdgeTable();
-        SetUpEdgeConnections();
+        //SetUpEdgeConnections();
 
         myMesh = new Mesh();
         myMesh.name = "Marching Cubes Mesh";
@@ -287,12 +290,13 @@ public class MetaballManager : MonoBehaviour
         cutEdgePoints = new Vector3[12];
 
         StartCoroutine("LevelOfDetail");
-        StartCoroutine("HeavyCalculations");
+        StartCoroutine("MarchingCubesTick");
     }
 
+    //Changes the size of metaballs based on the resolution of the grid
     public float GetDesiredMetaballSize()
     {
-        return cellVolume * 29000;
+        return cellVolume * 7.5f;
         //return cellVolume * 0.0001f;
     }
 
@@ -305,6 +309,9 @@ public class MetaballManager : MonoBehaviour
         //}
     }
 
+    /// <summary>
+    /// Creates a 3D grid using the attached Box Collider component as the size reference.
+    /// </summary>
     void CreateAllCells()
     {
         int i = 0;
@@ -353,7 +360,7 @@ public class MetaballManager : MonoBehaviour
                             allCells[i - 1].myCorners[1] = newNode;
                         }
 
-                        //Talking to things lower than me
+                        //Talking to cells lower than me
                         if (y > 0)
                         {
                             //4
@@ -364,7 +371,7 @@ public class MetaballManager : MonoBehaviour
                                 allCells[i - (cellsPerSide[0] + 1)].myCorners[5] = newNode;
                         }
 
-                        //Talking to things behind me
+                        //Talking to cells behind me
                         if (z > 0)
                         {
                             int behindOffset = (cellsPerSide[1] * cellsPerSide[0]);
@@ -493,6 +500,10 @@ public class MetaballManager : MonoBehaviour
         //metaballPowers = new ComputeBuffer(allMetaballs, 25);
     }
 
+    /// <summary>
+    /// Moves all cells along with the manager
+    /// </summary>
+    /// <param name="movement"></param>
     void MoveAllThings(Vector3 movement)
     {
         for (int i = 0; i < allCells.Count; i++)
@@ -507,7 +518,13 @@ public class MetaballManager : MonoBehaviour
         }
     }
 
-    IEnumerator HeavyCalculations()
+    /// <summary>
+    /// This is the coroutine which handles all large calculations by dispatching compute shaders,
+    /// clearing the mesh and putting a new mesh together. It is given a variable WaitForSeconds value as a form
+    /// of "Level of Detail" - distant effects have a larger delay.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator MarchingCubesTick()
     {
         while (true)
         {
@@ -526,7 +543,7 @@ public class MetaballManager : MonoBehaviour
             }
 
             //Pauses Unity if the frame rate is unreasonably low
-            if (Time.deltaTime > 0.15f && Time.timeSinceLevelLoad > 1)
+            if (Time.deltaTime > 0.25f && Time.timeSinceLevelLoad > 1)
             {
                 Debug.Break();
             }
@@ -562,6 +579,7 @@ public class MetaballManager : MonoBehaviour
                 movementSinceLastTick = Vector3.zero;
             }
 
+            //Applies the new information to the Mesh component and calculates normals
             if (vertList.Count == triangleList.Count)
             {
                 myMesh.vertices = vertList.ToArray();
@@ -591,6 +609,11 @@ public class MetaballManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Syncs the given CPU corner's info with the GPU info
+    /// </summary>
+    /// <param name="corner"></param>
+    /// <param name="node"></param>
     void AssignGPUCornerInfo(ref GPUCorner corner, ref CellCorner node)
     {
         corner.currentIntensity = node.currentIntensity;
@@ -603,6 +626,10 @@ public class MetaballManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Sends information to the GPU and dispatches the kernel which calculates corner densities.
+    /// The calculated data is returned in a different function at a later time.
+    /// </summary>
     void GetDensitiesFromGPU()
     {
         //Setting GPU array values to match the Unity scene
@@ -635,6 +662,9 @@ public class MetaballManager : MonoBehaviour
         myComputeShader.Dispatch(myComputeShader.FindKernel("GetDensities"), cellsPerSide[0] / 4, cellsPerSide[1] / 4, cellsPerSide[2] / 4);
     }
 
+    /// <summary>
+    /// Gets the calculated corner densities back from the GPU.
+    /// </summary>
     void ReturnDataFromGPUBuffer()
     {
         //Returns the info to the "real world"
@@ -647,27 +677,27 @@ public class MetaballManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Cancelled functionality to include other Marching Cubes calculations in the Compute Shader
+    /// </summary>
     void GetVerticesFromGPU()
     {
         //myComputeShader.Dispatch(myComputeShader.FindKernel("GetVertices"), Cell)
     }
 
-    void Update()
-    {
-
-    }
-
     void FixedUpdate()
     {
+        //Stores values used to keep cells aligned with the MetaballManager if it moves at runtime
         movementSinceLastTick += (transform.position - prevPos);
         prevPos = transform.position;
-        //PositionMetaballs();
     }
 
+    /// <summary>
+    /// Stops co-routines and releases buffers.
+    /// </summary>
     void OnDestroy()
     {
         StopAllCoroutines();
-
 
         if (cornerBuffer != null)
             cornerBuffer.Release();
@@ -701,7 +731,7 @@ public class MetaballManager : MonoBehaviour
     //}
 
         /// <summary>
-        /// Version of triangulation which will use a compute shader
+        /// Version of triangulation which will use a compute shader - CANCELLED
         /// </summary>
         /// <param name="one"></param>
         /// <param name="two"></param>
@@ -711,110 +741,111 @@ public class MetaballManager : MonoBehaviour
         /// <param name="six"></param>
         /// <param name="seven"></param>
         /// <param name="eight"></param>
-    void TriangulateGPUCell(GPUCorner one, GPUCorner two, GPUCorner three, GPUCorner four, GPUCorner five, GPUCorner six, GPUCorner seven, GPUCorner eight)
-    {
-        int cellType = 0;
+    //void TriangulateGPUCell(GPUCorner one, GPUCorner two, GPUCorner three, GPUCorner four, GPUCorner five, GPUCorner six, GPUCorner seven, GPUCorner eight)
+    //{
+    //    int cellType = 0;
 
-        //Setting cellType
-        if (one.currentIntensity > 1)
-            cellType |= 1;
-        if (two.currentIntensity > 1)
-            cellType |= 2;
-        if (three.currentIntensity > 1)
-            cellType |= 4;
-        if (four.currentIntensity > 1)
-            cellType |= 8;
-        if (five.currentIntensity > 1)
-            cellType |= 16;
-        if (six.currentIntensity > 1)
-            cellType |= 32;
-        if (seven.currentIntensity > 1)
-            cellType |= 64;
-        if (eight.currentIntensity > 1)
-            cellType |= 128;
+    //    //Setting cellType
+    //    if (one.currentIntensity > 1)
+    //        cellType |= 1;
+    //    if (two.currentIntensity > 1)
+    //        cellType |= 2;
+    //    if (three.currentIntensity > 1)
+    //        cellType |= 4;
+    //    if (four.currentIntensity > 1)
+    //        cellType |= 8;
+    //    if (five.currentIntensity > 1)
+    //        cellType |= 16;
+    //    if (six.currentIntensity > 1)
+    //        cellType |= 32;
+    //    if (seven.currentIntensity > 1)
+    //        cellType |= 64;
+    //    if (eight.currentIntensity > 1)
+    //        cellType |= 128;
 
-        int edgeFlags = edgeTable[cellType];
+    //    int edgeFlags = edgeTable[cellType];
 
-        if (edgeFlags == 0)
-        {
-            //Entirely inside or outside the surface
-            return;
-        }
+    //    if (edgeFlags == 0)
+    //    {
+    //        //Entirely inside or outside the surface
+    //        return;
+    //    }
 
-        if ((edgeTable[cellType] & 1) == 1)
-        {
-            cutEdgePoints[0] = Interpolation(one.pos, two.pos, one.currentIntensity, two.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 2) == 2)
-        {
-            cutEdgePoints[1] = Interpolation(two.pos, three.pos, two.currentIntensity, three.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 4) == 4)
-        {
-            cutEdgePoints[2] = Interpolation(three.pos, four.pos, three.currentIntensity, four.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 8) == 8)
-        {
-            cutEdgePoints[3] = Interpolation(four.pos, one.pos, four.currentIntensity, one.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 16) == 16)
-        {
-            cutEdgePoints[4] = Interpolation(five.pos, six.pos, five.currentIntensity, six.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 32) == 32)
-        {
-            cutEdgePoints[5] = Interpolation(six.pos, seven.pos, six.currentIntensity, seven.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 64) == 64)
-        {
-            cutEdgePoints[6] = Interpolation(seven.pos, eight.pos, seven.currentIntensity, eight.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 128) == 128)
-        {
-            cutEdgePoints[7] = Interpolation(eight.pos, five.pos, eight.currentIntensity, five.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 256) == 256)
-        {
-            cutEdgePoints[8] = Interpolation(one.pos, five.pos, one.currentIntensity, five.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 512) == 512)
-        {
-            cutEdgePoints[9] = Interpolation(two.pos, six.pos, two.currentIntensity, six.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 1024) == 1024)
-        {
-            cutEdgePoints[10] = Interpolation(three.pos, seven.pos, three.currentIntensity, seven.currentIntensity);
-        }
-        if ((edgeTable[cellType] & 2048) == 2048)
-        {
-            cutEdgePoints[11] = Interpolation(four.pos, eight.pos, four.currentIntensity, eight.currentIntensity);
-        }
+    //    if ((edgeTable[cellType] & 1) == 1)
+    //    {
+    //        cutEdgePoints[0] = Interpolation(one.pos, two.pos, one.currentIntensity, two.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 2) == 2)
+    //    {
+    //        cutEdgePoints[1] = Interpolation(two.pos, three.pos, two.currentIntensity, three.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 4) == 4)
+    //    {
+    //        cutEdgePoints[2] = Interpolation(three.pos, four.pos, three.currentIntensity, four.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 8) == 8)
+    //    {
+    //        cutEdgePoints[3] = Interpolation(four.pos, one.pos, four.currentIntensity, one.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 16) == 16)
+    //    {
+    //        cutEdgePoints[4] = Interpolation(five.pos, six.pos, five.currentIntensity, six.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 32) == 32)
+    //    {
+    //        cutEdgePoints[5] = Interpolation(six.pos, seven.pos, six.currentIntensity, seven.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 64) == 64)
+    //    {
+    //        cutEdgePoints[6] = Interpolation(seven.pos, eight.pos, seven.currentIntensity, eight.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 128) == 128)
+    //    {
+    //        cutEdgePoints[7] = Interpolation(eight.pos, five.pos, eight.currentIntensity, five.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 256) == 256)
+    //    {
+    //        cutEdgePoints[8] = Interpolation(one.pos, five.pos, one.currentIntensity, five.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 512) == 512)
+    //    {
+    //        cutEdgePoints[9] = Interpolation(two.pos, six.pos, two.currentIntensity, six.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 1024) == 1024)
+    //    {
+    //        cutEdgePoints[10] = Interpolation(three.pos, seven.pos, three.currentIntensity, seven.currentIntensity);
+    //    }
+    //    if ((edgeTable[cellType] & 2048) == 2048)
+    //    {
+    //        cutEdgePoints[11] = Interpolation(four.pos, eight.pos, four.currentIntensity, eight.currentIntensity);
+    //    }
 
 
-        //Triangulation
-        cellBuffer.SetData(gpuCells);
-        myComputeShader.SetBuffer(myComputeShader.FindKernel("GetVertices"), "allCells", cellBuffer);
-        myComputeShader.SetBuffer(myComputeShader.FindKernel("GetVertices"), "vertices", vertexBuffer);
-        myComputeShader.SetBuffer(myComputeShader.FindKernel("GetVertices"), "triangles", triangleBuffer);
+    //    //Triangulation
+    //    cellBuffer.SetData(gpuCells);
+    //    myComputeShader.SetBuffer(myComputeShader.FindKernel("GetVertices"), "allCells", cellBuffer);
+    //    myComputeShader.SetBuffer(myComputeShader.FindKernel("GetVertices"), "vertices", vertexBuffer);
+    //    myComputeShader.SetBuffer(myComputeShader.FindKernel("GetVertices"), "triangles", triangleBuffer);
 
-        //myComputeShader.Dispatch(myComputeShader.FindKernel("GetVertices"), cellsPerSide[0] / 8, cellsPerSide[1] / 8, cellsPerSide[2] / 8);
-        //Debug.Log(triangleBuffer.count);
-        //vertexBuffer.GetData(newVerts);
-        //triangleBuffer.GetData(newTris);
+    //    //myComputeShader.Dispatch(myComputeShader.FindKernel("GetVertices"), cellsPerSide[0] / 8, cellsPerSide[1] / 8, cellsPerSide[2] / 8);
+    //    //Debug.Log(triangleBuffer.count);
+    //    //vertexBuffer.GetData(newVerts);
+    //    //triangleBuffer.GetData(newTris);
 
-        //Create the triangles for this cell
-        for (int i = 0; triTable[cellType, i] != -1; i += 3)
-        {
-            CreateTriangle(
-                cutEdgePoints[triTable[cellType, i]],
-                cutEdgePoints[triTable[cellType, i + 1]],
-                cutEdgePoints[triTable[cellType, i + 2]]
-                );
-        }
-    }
+    //    //Create the triangles for this cell
+    //    for (int i = 0; triTable[cellType, i] != -1; i += 3)
+    //    {
+    //        CreateTriangle(
+    //            cutEdgePoints[triTable[cellType, i]],
+    //            cutEdgePoints[triTable[cellType, i + 1]],
+    //            cutEdgePoints[triTable[cellType, i + 2]]
+    //            );
+    //    }
+    //}
 
     /// <summary>
-    /// Standard version of triangulation
+    /// Standard version of triangulation. Uses bitwise operations to store which sort of mesh should be created in the given cell,
+    /// and then interpolates between edges to create a mesh in that cell.
     /// </summary>
     /// <param name="nodes"></param>
     void TriangulateCell(CellCorner[] nodes)
@@ -1273,11 +1304,11 @@ public class MetaballManager : MonoBehaviour
 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
     }
 
-    void SetUpEdgeConnections()
-    {
-        edgeConnections = new int[12, 2] {
-        { 0,1}, { 1,2}, { 2,3}, { 3,0},
-        { 4,5}, { 5,6}, { 6,7}, { 7,4},
-        { 0,4}, { 1,5}, { 2,6}, { 3,7} };
-    }
+    //void SetUpEdgeConnections()
+    //{
+    //    edgeConnections = new int[12, 2] {
+    //    { 0,1}, { 1,2}, { 2,3}, { 3,0},
+    //    { 4,5}, { 5,6}, { 6,7}, { 7,4},
+    //    { 0,4}, { 1,5}, { 2,6}, { 3,7} };
+    //}
 }

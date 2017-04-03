@@ -290,6 +290,14 @@ public class MarchingSquaresGrid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates a given number of 2D metaballs at the given location and gives them velocity.
+    /// The maxiumum number of metaballs allowed is also here.
+    /// </summary>
+    /// <param name="speed"></param>
+    /// <param name="pos"></param>
+    /// <param name="num"></param>
+    /// <param name="size"></param>
     public void BurstMetaballs(float speed, Vector3 pos, float num = 6, float size = 1)
     {
         int maxBalls = 32;
@@ -299,6 +307,7 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         for (int i = 0; i < num; i++)
         {
+            //This was an old approach - I decided it looks less jarring to prevent new metaballs then remove old ones
             if (allMetaball2Ds.Count >= maxBalls)
             {
                 //allMetaball2Ds.RemoveAt(0);
@@ -331,6 +340,8 @@ public class MarchingSquaresGrid : MonoBehaviour
         metaballBuffer.SetData(allMetaball2Ds.ToArray());
     }
 
+    //This uses raycasting to find an appropriate place to perform the proper raycast.
+    //This will ensure that the 2nd raycast has a clear path to the surface the metaball hit.
     Vector3 FindRaycastStart(Vector3 pos, Vector3 forward, float distanceForward)
     {
         RaycastHit rH;
@@ -395,14 +406,12 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         }
 
-        //If cell starts at bottom left corner
+        //Cell's origin is the bottom left corner
         allCells[i].cornerPositions[0] = pos;// + (transform.up * halfCellSize) + (transform.right * halfCellSize);
         allCells[i].cornerPositions[1] = pos + (transform.right * cellSize);
         allCells[i].cornerPositions[2] = pos + (transform.up * cellSize) + (transform.right * cellSize);
         allCells[i].cornerPositions[3] = pos + (transform.up * cellSize);
 
-        //Debug.DrawLine(allCells[i].cornerPositions[0], allCells[i].cornerPositions[2], Color.red,999);
-        //Debug.DrawLine(allCells[i].cornerPositions[1], allCells[i].cornerPositions[3], Color.red,999);
 
         allCells[i].cornerDensities[0] = 0;
         allCells[i].cornerDensities[1] = 0;
@@ -448,13 +457,16 @@ public class MarchingSquaresGrid : MonoBehaviour
         }
     }
 
+    //Properly disables this grid
     public void Disable()
     {
         allCells = null;
         gameObject.SetActive(false);
-
     }
 
+    /// <summary>
+    /// Debug things
+    /// </summary>
     void OnDrawGizmos()
     {
         //for (int i = 0; i < allCells.Length; i++)
@@ -501,11 +513,14 @@ public class MarchingSquaresGrid : MonoBehaviour
             debug++;
         }
 
+        //Used to detect movements and these variables are used later to move all cells
         movementSinceLastFrame += transform.position - prevPos;
-
         prevPos = transform.position;
     }
 
+    /// <summary>
+    /// This is where the mesh is reset and then rebuilt by looping through each cell
+    /// </summary>
     void Triangulate()
     {
         if(vertices==null)
@@ -527,22 +542,24 @@ public class MarchingSquaresGrid : MonoBehaviour
             else
             {
                 int startPos = i * 4;
-                //Cell c = allCells[i];
-                //TriangulateCell(allNodes[startPos], allNodes[startPos + 1], allNodes[startPos + 2], allNodes[startPos + 3]);
                 TriangulateCell(ref allCells[i]);
             }
-            //TriangulateCell(allCells[i]);
-            //TriangulateCell(allCells[i], allCells[i + 1], allCells[i + (int)resolution], allCells[i + (int)resolution + 1], allCells[i + (int)resolution * (int)resolution], allCells[i + ((int)resolution * (int)resolution) + 1], allCells[i + ((int)resolution * (int)resolution) + (int)resolution], allCells[i + ((int)resolution * (int)resolution) + 1]);
         }
 
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
 
         mesh.RecalculateNormals();
-
-        //GetComponent<Renderer>().material = waterMat;
     }
 
+
+    /// <summary>
+    /// This interpolates a vertex position between two nodes based on their densities
+    /// </summary>
+    /// <param name="c"></param>
+    /// <param name="index1"></param>
+    /// <param name="index2"></param>
+    /// <returns></returns>
     Vector3 Interpolate(Cell c, int index1, int index2)
     {
         Vector3 pos1 = c.cornerPositions[index1];
@@ -566,6 +583,9 @@ public class MarchingSquaresGrid : MonoBehaviour
         return finalPoint;
     }
 
+    /// <summary>
+    /// Sets info on the shader and then dispatches the Physics kernel of the Marching Squares shader
+    /// </summary>
     void ComputeShaderPhysics()
     {
         myCS.SetInt("numBalls", allMetaball2Ds.Count);
@@ -577,6 +597,9 @@ public class MarchingSquaresGrid : MonoBehaviour
         myCS.Dispatch(myCS.FindKernel("UpdatePhysics"), allMetaball2Ds.Count, 1, 1);
     }
 
+    /// <summary>
+    /// Sends info to the GPU and dispatches the GetDensities kernel on the GPU
+    /// </summary>
     void ApplyComputeShader()
     {
         if(cellCornerBuffer.count>1 && metaballBuffer.count>1)
@@ -600,6 +623,9 @@ public class MarchingSquaresGrid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets data back from the GPU. This is a seperate function to allow the GPU time to calculate this data before asking it to return it
+    /// </summary>
     void ReturnDataFromGPU()
     {
         if (gpuNodeInfo == null || gpuNodeInfo.Length != cellCornerBuffer.count)
@@ -626,6 +652,10 @@ public class MarchingSquaresGrid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This is the main Co-routine, which dispatches compute shaders and puts the final mesh together
+    /// </summary>
+    /// <returns></returns>
     IEnumerator HeavyCalculations()
     {
         float timeDelay = 0.025f;
@@ -667,6 +697,10 @@ public class MarchingSquaresGrid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This is where the densities of a given cell's corner are considered and vertices are created accordingly
+    /// </summary>
+    /// <param name="c"></param>
     void TriangulateCell(ref Cell c)
     {
 
@@ -782,6 +816,12 @@ public class MarchingSquaresGrid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates a triangle with the given positions
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="c"></param>
     void AddTriangle(Vector3 a, Vector3 b, Vector3 c)
     {
         int vertexIndex = vertices.Count;
@@ -805,6 +845,13 @@ public class MarchingSquaresGrid : MonoBehaviour
         //Debug.Break();
     }
 
+    /// <summary>
+    /// Creates a quad with the given positions
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="c"></param>
+    /// <param name="d"></param>
     void AddQuad(Vector3 a, Vector3 b, Vector3 c, Vector3 d)
     {
         int vertexIndex = vertices.Count;
@@ -833,6 +880,14 @@ public class MarchingSquaresGrid : MonoBehaviour
         triangles.Add(vertexIndex + 3);
     }
 
+    /// <summary>
+    /// Creates a pentagon with the given positions
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="c"></param>
+    /// <param name="d"></param>
+    /// <param name="e"></param>
     void AddPentagon(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 e)
     {
         int vertexIndex = vertices.Count;
@@ -866,7 +921,5 @@ public class MarchingSquaresGrid : MonoBehaviour
         triangles.Add(vertexIndex);
         triangles.Add(vertexIndex + 3);
         triangles.Add(vertexIndex + 4);
-
-
     }
 }

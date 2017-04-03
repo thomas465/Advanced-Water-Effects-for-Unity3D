@@ -13,7 +13,7 @@ public class DecalPoolScript : MonoBehaviour
 
     //Consts
     static float baseGridSize = 1.25f;
-    static int baseGridMaxAmount = 28, baseGridRes = 32;
+    static int baseGridMaxAmount = 32, baseGridRes = 24;
 
     //Pool of nodes
     public static List<MarchingSquaresGrid.CellCorner> allCellCorners;
@@ -32,6 +32,10 @@ public class DecalPoolScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets up the pool of inactive grids
+    /// </summary>
+    /// <param name="num"></param>
     void CreateGridPool(int num)
     {
         gridPool = new MarchingSquaresGrid[num];
@@ -59,6 +63,15 @@ public class DecalPoolScript : MonoBehaviour
         CreateGridPool(baseGridMaxAmount);
     }
 
+    /// <summary>
+    /// Activates a grid from the pool and places it at the given position
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <param name="normal"></param>
+    /// <param name="surfaceObj"></param>
+    /// <param name="newMaterial"></param>
+    /// <param name="size"></param>
+    /// <param name="metaballSize"></param>
     public void CreateStain(Vector3 pos, Vector3 normal, GameObject surfaceObj, Material newMaterial = null, float size = 1, float metaballSize = 1)
     {
         if (!IsExistingGrid(pos, size, metaballSize))
@@ -75,6 +88,13 @@ public class DecalPoolScript : MonoBehaviour
     //    }
     //}
 
+        /// <summary>
+        /// Checks to see if there is an available grid in this location already which could be re-used for this collision, and creates more metaballs on THAT grid rather than making a new grid.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="size"></param>
+        /// <param name="metaballSize"></param>
+        /// <returns></returns>
     bool IsExistingGrid(Vector3 pos, float size, float metaballSize)
     {
         float threshold = baseGridSize * size * 0.25f;
@@ -101,6 +121,10 @@ public class DecalPoolScript : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Tries to find an inactive grid, and if there are none then it takes the oldest active grid it can find.
+    /// </summary>
+    /// <returns></returns>
     MarchingSquaresGrid GetAvailableGrid()
     {
         for (int i = 0; i < gridPool.Length; i++)
@@ -127,16 +151,10 @@ public class DecalPoolScript : MonoBehaviour
         return gridPool[curIndex];
     }
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-
     // Update is called once per frame
     void Update()
     {
+        //Debug code - Pressing Right CTRL and other buttons will change settings
         if (Input.GetKey(KeyCode.RightControl))
         {
             if (Input.GetKeyDown(KeyCode.M))
@@ -169,6 +187,7 @@ public class DecalPoolScript : MonoBehaviour
         }
     }
 
+    //Destroys all active grids and makes a fresh pool
     void Rebuild()
     {
         for(int i=0; i<gridPool.Length; i++)

@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// This is essentially a metaball emitter and should be used similarly to a Particle System.
+/// </summary>
 public class FountainScript : MonoBehaviour {
 
     public MetaballManager myManager;
@@ -19,7 +22,9 @@ public class FountainScript : MonoBehaviour {
 
     float flowForSeconds = 0;
 
-    // Use this for initialization
+    /// <summary>
+    /// If no manager or pool is given, this script will try to find one.
+    /// </summary>
     protected virtual void Start()
     {
         if (!myManager)
@@ -33,7 +38,6 @@ public class FountainScript : MonoBehaviour {
         }
     }
 	
-	// Update is called once per frame
 	protected virtual void Update () {
 
         if(flowForSeconds>0)
@@ -47,6 +51,9 @@ public class FountainScript : MonoBehaviour {
             }
         }
 
+        //If this fountain is active, a timer is used to decide when to release a metaball.
+        //A random direction is calculated based on given values, a metaball is fired and the timer is
+        //reset.
         if (active)
         {
             timer -= Time.deltaTime;
@@ -72,6 +79,10 @@ public class FountainScript : MonoBehaviour {
         }
 	}
 
+    /// <summary>
+    /// Bursts out a given amount of metaballs at once.
+    /// </summary>
+    /// <param name="amount"></param>
     public void Burst(int amount)
     {
         for(int i=0; i<amount; i++)
@@ -89,6 +100,10 @@ public class FountainScript : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// This causes the fountain to produce metaballs for the given amount of time in seconds.
+    /// </summary>
+    /// <param name="_time"></param>
     public virtual void FlowForSeconds(float _time)
     {
         timer = 0;
