@@ -81,7 +81,7 @@ public class EnemyScript : MonoBehaviour
         if (col != null)
         {
             myDamageEffect.transform.position = col.contacts[0].point;
-            myDamageEffect.FlowForSeconds(0.16f);
+            myDamageEffect.FlowForSeconds(0.1f);
             myDamageEffect.transform.rotation = Quaternion.LookRotation(col.contacts[0].normal);
         }
 

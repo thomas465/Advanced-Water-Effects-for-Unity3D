@@ -11,6 +11,7 @@ public class MetaballScript : MonoBehaviour
     MarchingSquaresManager myMSManager;
 
     public MetaballManager.Metaball myInfo;
+    public MetaballPoolScript myMetaballPool;
 
     bool scaleUp = true;
     float maxSize = 1;
@@ -61,6 +62,27 @@ public class MetaballScript : MonoBehaviour
         if (myInfo.life <= 0)
         {
             Die();
+        }
+    }
+
+    public void Split(int howManyTimes)
+    {
+        for(int i=0; i<howManyTimes; i++)
+        {
+            Vector3 dir = Vector3.zero;
+
+            float randomSize = 2;
+
+            dir += transform.right * Random.Range(-randomSize, randomSize);
+            dir += transform.forward * Random.Range(-randomSize, randomSize);
+
+            float newSize = myInfo.radius * 0.5f;
+            myInfo.radius = newSize;
+
+            if (myMetaballPool)
+            {
+                myMetaballPool.FireMetaball(myManager, transform.position, dir, Random.Range(GetVelocity().magnitude * 0.2f, GetVelocity().magnitude * 0.5f), newSize, myInfo.life);
+            }
         }
     }
 
@@ -176,7 +198,6 @@ public class MetaballScript : MonoBehaviour
             //Makes fluids break down if they're not gloopy
             myInfo.radius *= viscocity;
             transform.localScale *= viscocity;
-
 
             //myMSManager.CreateDecalSquares(transform.position, col.contacts[0].normal, rb.velocity.normalized, myInfo.radius, rb.velocity.magnitude);
 

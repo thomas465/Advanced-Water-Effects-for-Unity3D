@@ -8,6 +8,7 @@ public class SineCupScript : MonoBehaviour
 
     Vector3 pos;
     public float sineSpeed, sineLength;
+    public float acceleration;
 
     // Use this for initialization
     void Start()
@@ -24,6 +25,6 @@ public class SineCupScript : MonoBehaviour
         pos.x = Mathf.Sin(Time.timeSinceLevelLoad * sineSpeed) * sineLength;
         transform.position = pos;
 
-        sineSpeed += 0.01f * Time.deltaTime;
+        sineSpeed += acceleration * Time.deltaTime;
     }
 }

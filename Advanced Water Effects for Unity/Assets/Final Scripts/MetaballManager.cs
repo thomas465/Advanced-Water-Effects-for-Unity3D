@@ -532,18 +532,21 @@ public class MetaballManager : MonoBehaviour
             while (currentDetailLevel <= 0)
             {
                 myMesh.Clear();
-                break;
+                yield return new WaitForSeconds(tickRate);
+                continue;
             }
 
             //Skips all of these calculations if there are no metaballs
-            while(allMetaballs.Count==0)
+            if(allMetaballs.Count==0)
             {
-                myMesh.Clear();
-                break;
+                //myMesh.Clear();
+                //break;
+                yield return new WaitForSeconds(tickRate);
+                continue;
             }
 
-            //Pauses Unity if the frame rate is unreasonably low
-            if (Time.deltaTime > 0.25f && Time.timeSinceLevelLoad > 1)
+            //Pauses Unity if the frame rate is unreasonably low - debug purposes
+            if (Time.deltaTime > 0.75f && Time.timeSinceLevelLoad > 1)
             {
                 Debug.Break();
             }

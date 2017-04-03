@@ -42,11 +42,13 @@ public class DecalPoolScript : MonoBehaviour
 
         for (int i = 0; i < num; i++)
         {
-            gridPool[i] = Instantiate<GameObject>(vMPool).GetComponent<MarchingSquaresGrid>();
+            {
+                gridPool[i] = Instantiate<GameObject>(vMPool).GetComponent<MarchingSquaresGrid>();
 
-            DontDestroyOnLoad(gridPool[i].gameObject);
-            gridPool[i].gameObject.SetActive(false);
-            gridPool[i].hideFlags = HideFlags.HideInHierarchy;
+                DontDestroyOnLoad(gridPool[i].gameObject);
+                gridPool[i].gameObject.SetActive(false);
+                gridPool[i].hideFlags = HideFlags.HideInHierarchy;
+            }
         }
     }
 
@@ -56,7 +58,10 @@ public class DecalPoolScript : MonoBehaviour
         {
             for (int i = 0; i < gridPool.Length; i++)
             {
-                Destroy(gridPool[i]);
+                if (gridPool[i])
+                {
+                    Destroy(gridPool[i]);
+                }
             }
         }
 
@@ -102,18 +107,22 @@ public class DecalPoolScript : MonoBehaviour
 
         for (int i = 0; i < gridPool.Length; i++)
         {
-            float dist = Vector3.Distance(pos, gridPool[i].transform.position);
-
-            if (dist <= threshold && gridPool[i].gameObject.activeInHierarchy)
+            if (gridPool[i])
             {
-                if (dist >= burstThreshold)
+                float dist = Vector3.Distance(pos, gridPool[i].transform.position);
+
+                if (dist <= threshold && gridPool[i].gameObject.activeInHierarchy)
                 {
-                    //Debug.Log("Bursting from old one");
-                    Debug.DrawLine(pos, gridPool[i].transform.position, Color.magenta, 2);
-                    gridPool[i].BurstMetaballs(1, pos, 1, metaballSize);
+                    if (dist >= burstThreshold)
+                    {
+                        //Debug.Log("Bursting from old one");
+                        Debug.DrawLine(pos, gridPool[i].transform.position, Color.magenta, 2);
+                        gridPool[i].BurstMetaballs(1, pos, 1, metaballSize);
+                    }
+
+                    return true;
                 }
 
-                return true;
             }
         }
 
@@ -129,13 +138,16 @@ public class DecalPoolScript : MonoBehaviour
     {
         for (int i = 0; i < gridPool.Length; i++)
         {
-            if (gridPool[i].gameObject.activeInHierarchy)
+            if (gridPool[i])
             {
+                if (gridPool[i].gameObject.activeInHierarchy)
+                {
 
-            }
-            else
-            {
-                return gridPool[i];
+                }
+                else
+                {
+                    return gridPool[i];
+                }
             }
         }
 

@@ -25,6 +25,7 @@ public class MetaballPoolScript : MonoBehaviour {
             nM.SetActive(false);
             //nM.hideFlags = HideFlags.HideInHierarchy;
             myMetaballs.Add(nM.GetComponent<MetaballScript>());
+            myMetaballs[i].myMetaballPool = this;
             //myMetaballs[myMetaballs.Count - 1].myManager = myManager;
         }
 
@@ -48,10 +49,14 @@ public class MetaballPoolScript : MonoBehaviour {
             newMetaball.transform.position = origin;
             newMetaball.myInfo.life = metaballLife;
 
-            if(manager)
+            if (manager)
+            {
                 newMetaball.transform.localScale = Vector3.one * originalMetaballRadius * (manager.GetDesiredMetaballSize());
+            }
             else
+            {
                 newMetaball.transform.localScale = Vector3.one * originalMetaballRadius;
+            }
 
             newMetaball.myManager = manager;
             newMetaball.Fire(direction * speed);
