@@ -35,10 +35,7 @@ public class UIScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha5))
             SceneManager.LoadScene(4);
 
-
-
-
-            if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
     }
 }

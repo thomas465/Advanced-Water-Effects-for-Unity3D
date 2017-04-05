@@ -14,6 +14,7 @@ public class DecalPoolScript : MonoBehaviour
     //Consts
     static float baseGridSize = 1.25f;
     static int baseGridMaxAmount = 32, baseGridRes = 24;
+    public bool enableInterpolation = false;
 
     //Pool of nodes
     public static List<MarchingSquaresGrid.CellCorner> allCellCorners;
@@ -31,6 +32,8 @@ public class DecalPoolScript : MonoBehaviour
             //DontDestroyOnLoad(gameObject);
 
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+
+            MarchingSquaresGrid.interpolationEnabled = enableInterpolation;
         }
     }
 
@@ -173,7 +176,7 @@ public class DecalPoolScript : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                MarchingSquaresGrid.interpolation = !MarchingSquaresGrid.interpolation;
+                MarchingSquaresGrid.interpolationEnabled = !MarchingSquaresGrid.interpolationEnabled;
             }
 
             if(Input.GetKeyDown(KeyCode.E))

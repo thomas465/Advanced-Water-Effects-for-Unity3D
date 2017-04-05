@@ -43,48 +43,17 @@ void AssignDensityToCorner(inout Corner c, inout RWStructuredBuffer<Metaball> me
 {
 	c.density = 0;
 
+	//Loops through each metaball to calculate the metaball density of this corner
 	for(int i=0; i<numBalls; i++)
 	{
 		Metaball m = metaballs[i];
-		//c.pos.z = 0;
-		//m.pos.z = 0;
-
-		float otherBit = (m.radius - length((c.pos - m.pos)) * length((c.pos - m.pos)) );
 
 		float distSq = length(c.pos - m.pos);
 		distSq = distSq * distSq;
 
 		float newDens = (m.radius * m.radius) / (distSq);
 		c.density += newDens;
-		
-		//metaballs[i].velocity *= 1 - (c.density * 0.1f);
 	}
-}
-
-void InterpolateBetweenCorners(inout Corner c1, inout Corner c2, float value1, float value2)
-{
-	
-}
-
-void MoveAllMetaballs()
-{
-	float gravityIntensity = 0.95f;
-
-	for(int i=0; i<numBalls; i++)
-	{	
-		allMetaballs[i].pos += movementSinceLastFrame;
-
-		allMetaballs[i].velocity += gravity * deltaTime * gravityIntensity;
-		allMetaballs[i].pos += allMetaballs[i].velocity * deltaTime;
-		allMetaballs[i].velocity *= 0.65f;
-	}
-}
-
-void JoinWithOtherMetaballs(inout Metaball me, int curIndex)
-{
-	float3 direction = normalize(allMetaballs[curIndex].pos - me.pos);
-
-	me.velocity += direction * deltaTime * 0.000000001f;
 }
 
 void MoveMetaball(int i)
@@ -98,19 +67,20 @@ void MoveMetaball(int i)
 	for(int m=0; m<numBalls; m++)
 	{
 		gravityIntensity -= (length(allMetaballs[i].pos - allMetaballs[m].pos) - threshold) * multiplier;
-
-		//JoinWithOtherMetaballs(allMetaballs[i], m);
 	}
 
+	//Ensures that a metaball never falls up or falls too quickly
 	gravityIntensity = clamp(gravityIntensity, 0.001f, 29.0f);
 
-		allMetaballs[i].pos += movementSinceLastFrame;
+	//Moves all metaballs based on where the grid is moving in the scene
+	allMetaballs[i].pos += movementSinceLastFrame;
 
-		allMetaballs[i].velocity += gravity * deltaTime * gravityIntensity;
-		allMetaballs[i].pos += allMetaballs[i].velocity * deltaTime;
+	//Applies changes to the velocity, and then applies the velocity to the metaball's position
+	allMetaballs[i].velocity += gravity * deltaTime * gravityIntensity;
+	allMetaballs[i].pos += allMetaballs[i].velocity * deltaTime;
 
-		//Apply drag
-		allMetaballs[i].velocity *= 1 - (deltaTime*6.0f);
+	//Apply drag
+	allMetaballs[i].velocity *= 1 - (deltaTime*6.0f);
 }
 
 
@@ -119,7 +89,9 @@ void GetDensities (uint3 id : SV_DispatchThreadID)
 {
 	int pos = (id.x + gridWidth) + (id.y * gridWidth);	
 
+	//Moves this thread's corner based on where the grid has moved in the scene
 	allCorners[pos].pos += movementSinceLastFrame;
+
 	AssignDensityToCorner(allCorners[pos], allMetaballs);
 }
 
@@ -130,36 +102,3 @@ void UpdatePhysics (uint3 id : SV_DispatchThreadID)
 
 	MoveMetaball(pos);
 }
-
-void CreateTriangle(float3 v1, float3 v2, float3 v3)
-{
-	uint index = 0;
-	uint stride = 0;
-	vertices.GetDimensions(index, stride);
-
-	vertices[index] = v1;
-	vertices[index+1] = v2;
-	vertices[index+2] = v3;
-
-	//////////////////////////////////////
-
-	uint triangleIndex = 0;
-	uint triangleStride = 0;
-	triangles.GetDimensions(triangleIndex, triangleStride);
-
-	triangles[triangleIndex] = index;
-	triangles[triangleIndex+1] = index+1;
-	triangles[triangleIndex+2] = index+2;
-
-	numTris +=3;
-}
-
-float3 Interpolation(float3 v1, float3 v2, float i1, float i2)
-{
-        float3 finalPoint;
-
-        finalPoint = v1 + (1 - i1) * (v2 - v1) / (i2 - i1);
-
-		return finalPoint;
-}
-

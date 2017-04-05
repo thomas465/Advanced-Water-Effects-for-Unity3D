@@ -20,7 +20,10 @@ public class MetaballPoolScript : MonoBehaviour {
         {
             GameObject nM = GameObject.Instantiate(metaballPrefab);
             nM.SetActive(false);
+
+            //This hides metaballs from the Transform hierarchy in Unity
             nM.hideFlags = HideFlags.HideInHierarchy;
+
             myMetaballs.Add(nM.GetComponent<MetaballScript>());
             myMetaballs[i].myMetaballPool = this;
         }
@@ -43,7 +46,7 @@ public class MetaballPoolScript : MonoBehaviour {
         {
             float originalMetaballRadius = metaballRadius;
 
-            //Makes it smaller here so that numbers in the inspector are more reasonable
+            //Makes it smaller here so that numbers written in the inspector can be larger and easier to work with
             metaballRadius *= 0.0001f;
 
             direction = direction.normalized;

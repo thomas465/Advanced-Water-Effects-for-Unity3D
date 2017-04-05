@@ -1,0 +1,571 @@
+Initialize engine version: 5.5.0f3 (38b4efef76f0)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: AMD Radeon HD 7800 Series (ID=0x6819)
+    Vendor:   ATI
+    VRAM:     2029 MB
+    Driver:   21.19.519.2
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll (this message is harmless)
+Loading C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
+- Completed reload, in  0.122 seconds
+Platform assembly: C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\Thomas\Documents\GitHub\Advanced-Water-Effects-for-Unity3D\DEMO BUILD\AdvancedWaterEffectsDemo_Data\Managed\System.dll (this message is harmless)
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 1.283153 ms
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: c8c -> priority: 1 
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 5.070534 ms
+
+Unloading 75 unused Assets to reduce memory usage. Loaded Objects now: 8925.
+Total: 32.648079 ms (FindLiveObjects: 0.585223 ms CreateObjectMapping: 0.111801 ms MarkObjects: 28.346897 ms  DeleteObjects: 3.602954 ms)
+
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 44.947426 ms
+
+Unloading 5 unused Assets to reduce memory usage. Loaded Objects now: 5686.
+Total: 31.312492 ms (FindLiveObjects: 0.303460 ms CreateObjectMapping: 0.077748 ms MarkObjects: 30.865891 ms  DeleteObjects: 0.063886 ms)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 4.368687 ms
+
+Unloading 45 unused Assets to reduce memory usage. Loaded Objects now: 6739.
+Total: 34.145191 ms (FindLiveObjects: 0.296830 ms CreateObjectMapping: 0.136512 ms MarkObjects: 33.564793 ms  DeleteObjects: 0.146155 ms)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Look rotation viewing vector is zero
+ 
+(Filename:  Line: 92)
+
+Unloading 7 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 4.223737 ms
+
+Unloading 41 unused Assets to reduce memory usage. Loaded Objects now: 7426.
+Total: 31.721424 ms (FindLiveObjects: 0.433041 ms CreateObjectMapping: 0.138922 ms MarkObjects: 31.041578 ms  DeleteObjects: 0.106376 ms)
+
+Unloading 3 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 2.977951 ms
+
+Unloading 66 unused Assets to reduce memory usage. Loaded Objects now: 12689.
+Total: 59.925480 ms (FindLiveObjects: 0.550267 ms CreateObjectMapping: 0.221794 ms MarkObjects: 54.194084 ms  DeleteObjects: 4.958431 ms)
+
+new wave: 1
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Wave complete!
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+new wave: 2
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Unloading 7 Unused Serialized files (Serialized files now loaded: 0)
+Wave complete!
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+UnloadTime: 5.036180 ms
+
+Unloading 68 unused Assets to reduce memory usage. Loaded Objects now: 9346.
+Total: 34.583656 ms (FindLiveObjects: 0.413453 ms CreateObjectMapping: 0.109089 ms MarkObjects: 33.361076 ms  DeleteObjects: 0.698833 ms)
+

@@ -13,7 +13,6 @@ public class MetaballManager : MonoBehaviour
     WaitForSeconds levelOfDetailTickRate = new WaitForSeconds(2.0f);
 
     //Mesh/Shader stuff
-    //int shaderKernel = 0;
     MeshRenderer myRenderer;
     Mesh myMesh;
 
@@ -95,7 +94,6 @@ public class MetaballManager : MonoBehaviour
     int numberOfCorners;
 
     Vector3 prevPos;
-    //Quaternion prevRot;
 
     /// <summary>
     /// Struct to put Corner info in to send to the GPU

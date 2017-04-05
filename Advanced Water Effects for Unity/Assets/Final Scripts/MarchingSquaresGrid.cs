@@ -5,7 +5,7 @@ using UnityEngine;
 public class MarchingSquaresGrid : MonoBehaviour
 {
     int debug = 0;
-    public static bool marchingSquaresEnabled = true, interpolation =  false;
+    public static bool marchingSquaresEnabled = true, interpolationEnabled =  false;
 
 
     public ComputeShader myCS;
@@ -32,7 +32,7 @@ public class MarchingSquaresGrid : MonoBehaviour
     Cell[] allCells;
 
     [SerializeField]
-    List<CellCorner> allNodes;
+    List<CellCorner> allCorners;
 
     List<Vector3> vertices;
     List<int> triangles;
@@ -107,19 +107,6 @@ public class MarchingSquaresGrid : MonoBehaviour
         StartCoroutine("HeavyCalculations");
     }
 
-    public void Enlarge()
-    {
-        //float maxSize = 10;
-
-        //if (worldSize < maxSize)
-        //{
-        //    worldSize += 0.05f;
-        //    resolution += 0.05f;
-
-        //    Create(transform.position, transform.forward, worldSize, resolution);
-        //}
-    }
-
     /// <summary>
     /// Resets the grid and positions it at the new surface
     /// </summary>
@@ -148,7 +135,7 @@ public class MarchingSquaresGrid : MonoBehaviour
         prevPos = transform.position;
 
         allCells = null;
-        allNodes = new List<CellCorner>();
+        allCorners = new List<CellCorner>();
 
         vertices = new List<Vector3>();
         triangles = new List<int>();
@@ -168,7 +155,6 @@ public class MarchingSquaresGrid : MonoBehaviour
         resolution = newResolution;
 
         Vector3 curPos = transform.position - ((transform.right + transform.up) * (worldSize * 0.5f));
-        //Vector3 startPos = curPos;
 
         //Debug.DrawLine(startPos, startPos + transform.forward, Color.magenta);
 
@@ -206,17 +192,15 @@ public class MarchingSquaresGrid : MonoBehaviour
             cellCornerBuffer.Release();
         }
 
-        cellCornerBuffer = new ComputeBuffer(allNodes.Count, sizeOfNodeStruct);
-        cellCornerBuffer.SetData(allNodes.ToArray());
+        cellCornerBuffer = new ComputeBuffer(allCorners.Count, sizeOfNodeStruct);
+        cellCornerBuffer.SetData(allCorners.ToArray());
 
-        sideLength = (int)Mathf.Sqrt(allNodes.Count);
+        sideLength = (int)Mathf.Sqrt(allCorners.Count);
     }
 
-    void FixedUpdate()
-    {      
-       // Debug.Log(marchingSquaresEnabled);
-    }
-
+    /// <summary>
+    /// Stops coroutines and releases buffers
+    /// </summary>
     void OnDestroy()
     {
         StopAllCoroutines();
@@ -232,6 +216,10 @@ public class MarchingSquaresGrid : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Metaballs were previously moved using this - the GPU moves them much more efficiently
+    /// </summary>
+    /// <param name="metaballIndex"></param>
     void MoveMetaball(int metaballIndex)
     {
         Metaball2D curMetaball2D;
@@ -250,6 +238,9 @@ public class MarchingSquaresGrid : MonoBehaviour
         allMetaball2Ds[metaballIndex] = curMetaball2D;
     }
 
+    /// <summary>
+    /// Marching Squares densities were previously calculated here - the GPU is far more efficient
+    /// </summary>
     void AssignDensities()
     {
         for (int cellIndex = 0; cellIndex < allCells.Length; cellIndex++)
@@ -301,7 +292,7 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         for (int i = 0; i < num; i++)
         {
-            //This was an old approach - I decided it looks less jarring to prevent new metaballs then remove old ones
+            //This was an old approach - in the end I decided that it looks less jarring to prevent new metaballs rather than remove old ones
             if (allMetaball2Ds.Count >= maxBalls)
             {
                 //allMetaball2Ds.RemoveAt(0);
@@ -372,11 +363,10 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         RaycastHit rH;
 
-        //Debug.DrawLine(pos, pos - transform.forward, Color.magenta, 2);
         float raycastDistance = 1;
         Vector3 startPos = FindRaycastStart(pos, transform.forward, raycastDistance);
 
-        if(Physics.Raycast(startPos, -transform.forward, out rH, raycastDistance, LayerMask.GetMask("Default")))
+        if (Physics.Raycast(startPos, -transform.forward, out rH, raycastDistance, LayerMask.GetMask("Default")))
         {
             if (Vector3.Dot(transform.forward, rH.normal) > 0.15f)
             {
@@ -385,23 +375,23 @@ public class MarchingSquaresGrid : MonoBehaviour
             }
             else
             {
-                //No cell here
+                //No reasonable surface here
                 allCells[i].disabled = true;
             }
         }
         else
         {
-            //No cell here
+            //No surface here to snap to
             allCells[i].disabled = true;
         }
 
-        if(allCells[i].disabled)
+        if (allCells[i].disabled)
         {
 
         }
 
         //Cell's origin is the bottom left corner
-        allCells[i].cornerPositions[0] = pos;// + (transform.up * halfCellSize) + (transform.right * halfCellSize);
+        allCells[i].cornerPositions[0] = pos;
         allCells[i].cornerPositions[1] = pos + (transform.right * cellSize);
         allCells[i].cornerPositions[2] = pos + (transform.up * cellSize) + (transform.right * cellSize);
         allCells[i].cornerPositions[3] = pos + (transform.up * cellSize);
@@ -414,41 +404,30 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         allCells[i].cornerIndices = new int[4];
 
-        bool createAllFour = false;
 
-        if (createAllFour)
+        CellCorner bottomLeft = new CellCorner();
+        bottomLeft.cornerPosition = allCells[i].cornerPositions[0];
+        allCorners.Add(bottomLeft);
+        int newNodeIndex = allCorners.Count - 1;
+
+        //This section sets up the corner indices for the new cell, using corners from previously created cells if there are any cells with appropriate corners
+        allCells[i].cornerIndices[0] = newNodeIndex;
+
+        if (x > 0)
         {
-            for (int j = 0; j < 4; j++)
-            {
-                CellCorner newNode = new CellCorner();
-                newNode.cornerPosition = allCells[i].cornerPositions[j];
-                allNodes.Add(newNode);
-            }
+            allCells[i - 1].cornerIndices[1] = newNodeIndex;
         }
-        else
+
+        if (y > 0)
         {
-            CellCorner bottomLeft = new CellCorner();
-            bottomLeft.cornerPosition = allCells[i].cornerPositions[0];
-            allNodes.Add(bottomLeft);
-            int newNodeIndex = allNodes.Count-1;
-
-            allCells[i].cornerIndices[0] = newNodeIndex;
-
-            if(x>0)
-            {
-                allCells[i - 1].cornerIndices[1] = newNodeIndex;
-            }
-
-            if (y > 0)
-            {
-                allCells[i - (int)resolution].cornerIndices[3] = newNodeIndex;
-            }
-
-            if (y > 0 && x > 0)
-            {
-                allCells[(i - (int)resolution) - 1].cornerIndices[2] = newNodeIndex;
-            }
+            allCells[i - (int)resolution].cornerIndices[3] = newNodeIndex;
         }
+
+        if (y > 0 && x > 0)
+        {
+            allCells[(i - (int)resolution) - 1].cornerIndices[2] = newNodeIndex;
+        }
+
     }
 
     //Properly disables this grid
@@ -535,7 +514,6 @@ public class MarchingSquaresGrid : MonoBehaviour
             }
             else
             {
-                //int startPos = i * 4;
                 TriangulateCell(ref allCells[i]);
             }
         }
@@ -562,14 +540,16 @@ public class MarchingSquaresGrid : MonoBehaviour
         float d1 = c.cornerDensities[index1];
         float d2 = c.cornerDensities[index2];
 
-        return Interpolation(pos1, pos2, d1, d2);
+        return InterpolateBetweenCells(pos1, pos2, d1, d2);
     }
 
-    Vector3 Interpolation(Vector3 v1, Vector3 v2, float i1, float i2)
+    Vector3 InterpolateBetweenCells(Vector3 v1, Vector3 v2, float i1, float i2)
     {
         Vector3 finalPoint;
         float length = Vector3.Distance(v1, v2);
-        if (interpolation)
+
+        //If interpolation is enabled, perform interpolation, otherwise go directly to the halfway point
+        if (interpolationEnabled)
             finalPoint = v1 + Vector3.ClampMagnitude((1 - i1) * (v2 - v1) / (i2 - i1), length);
         else
             finalPoint = Vector3.Lerp(v1, v2, 0.5f);
@@ -635,9 +615,9 @@ public class MarchingSquaresGrid : MonoBehaviour
         cellCornerBuffer.GetData(gpuNodeInfo);
         metaballBuffer.GetData(gpuMetaballInfo);
 
-        for (int i = 0; i < allNodes.Count; i++)
+        for (int i = 0; i < allCorners.Count; i++)
         {
-            allNodes[i] = gpuNodeInfo[i];
+            allCorners[i] = gpuNodeInfo[i];
         }
 
         for (int i = 0; i < allMetaball2Ds.Count; i++)
@@ -697,27 +677,13 @@ public class MarchingSquaresGrid : MonoBehaviour
     /// <param name="c"></param>
     void TriangulateCell(ref Cell c)
     {
-
         int cellType = 0;
-
-        //Cell c = new Cell();
-        //c.cornerPositions = new Vector3[4];
-        //c.cornerDensities = new float[4];
 
         for (int i = 0; i < 4; i++)
         {
-            c.cornerPositions[i] = allNodes[c.cornerIndices[i]].cornerPosition;
-            c.cornerDensities[i] = allNodes[c.cornerIndices[i]].density;
+            c.cornerPositions[i] = allCorners[c.cornerIndices[i]].cornerPosition;
+            c.cornerDensities[i] = allCorners[c.cornerIndices[i]].density;
         }
-
-        //c.cornerPositions[1] = two.cornerPosition;
-        //c.cornerPositions[2] = three.cornerPosition;
-        //c.cornerPositions[3] = four.cornerPosition;
-
-        //c.cornerDensities[0] = one.density;
-        //c.cornerDensities[1] = two.density;
-        //c.cornerDensities[2] = three.density;
-        //c.cornerDensities[3] = four.density;
 
         if (c.cornerDensities[0] >= 1)
             cellType |= 1;
@@ -733,7 +699,6 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         //if(Input.GetKey(KeyCode.T))
         //cellType = debug;
-
 
         //Placing triangles
         switch (cellType)
@@ -782,19 +747,16 @@ public class MarchingSquaresGrid : MonoBehaviour
                 AddQuad(c.cornerPositions[0], Interpolate(c,0,1), Interpolate(c, 2, 3), c.cornerPositions[3]);
                 AddTriangle(Interpolate(c, 1, 2), Interpolate(c, 2, 3), Interpolate(c, 0, 2));
                 AddQuad(Interpolate(c, 1, 2), Interpolate(c, 0, 2), Interpolate(c, 0, 1), c.cornerPositions[1]);
-                //AddPentagon(c.cornerPositions[1], c.cornerPositions[0], Interpolate(c, 0, 3), Interpolate(c, 2, 3), c.cornerPositions[3]);
                 break;
             case 13:
                 AddQuad(c.cornerPositions[2], c.cornerPositions[3], Interpolate(c,3,0), Interpolate(c,2,1));
                 AddTriangle(Interpolate(c, 1, 2), Interpolate(c, 2, 0), Interpolate(c, 0, 1));
                 AddQuad(Interpolate(c, 1, 0), Interpolate(c, 0, 2), Interpolate(c, 0, 3), c.cornerPositions[0]);
-                //AddPentagon(c.cornerPositions[2], c.cornerPositions[3], Interpolate(c, 1, 2), Interpolate(c, 0, 1), c.cornerPositions[0]);
                 break;
             case 14:
                 AddQuad(c.cornerPositions[2], Interpolate(c,2,3), Interpolate(c,1,0), c.cornerPositions[1]);
                 AddTriangle(Interpolate(c, 1, 0), Interpolate(c, 2, 0), Interpolate(c, 0, 3));
                 AddQuad(Interpolate(c, 2, 3), c.cornerPositions[3], Interpolate(c, 0, 3), Interpolate(c, 0, 2));
-                //AddPentagon(c.cornerPositions[3], c.cornerPositions[1], Interpolate(c, 0, 1), Interpolate(c, 0, 3), c.cornerPositions[2]);
                 break;
 
             //EXTRAS
@@ -836,7 +798,6 @@ public class MarchingSquaresGrid : MonoBehaviour
         triangles.Add(vertexIndex + 1);
         triangles.Add(vertexIndex + 2);
 
-        //Debug.Break();
     }
 
     /// <summary>
@@ -872,48 +833,5 @@ public class MarchingSquaresGrid : MonoBehaviour
         triangles.Add(vertexIndex);
         triangles.Add(vertexIndex + 2);
         triangles.Add(vertexIndex + 3);
-    }
-
-    /// <summary>
-    /// Creates a pentagon with the given positions
-    /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="c"></param>
-    /// <param name="d"></param>
-    /// <param name="e"></param>
-    void AddPentagon(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 e)
-    {
-        int vertexIndex = vertices.Count;
-
-        //Debug.DrawLine(a, b);
-        //Debug.DrawLine(b, c);
-        //Debug.DrawLine(c, a);
-        //Debug.DrawLine(d, c);
-        //Debug.DrawLine(e, d);
-
-        a = transform.InverseTransformPoint(a);
-        b = transform.InverseTransformPoint(b);
-        c = transform.InverseTransformPoint(c);
-        d = transform.InverseTransformPoint(d);
-        e = transform.InverseTransformPoint(e);
-
-        vertices.Add(a);
-        vertices.Add(b);
-        vertices.Add(c);
-        vertices.Add(d);
-        vertices.Add(e);
-
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 1);
-        triangles.Add(vertexIndex + 2);
-
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 2);
-        triangles.Add(vertexIndex + 3);
-
-        triangles.Add(vertexIndex);
-        triangles.Add(vertexIndex + 3);
-        triangles.Add(vertexIndex + 4);
     }
 }
