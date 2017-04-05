@@ -28,7 +28,7 @@ public class DecalPoolScript : MonoBehaviour
         {
             singleton = this;
             CreateGridPool(baseGridMaxAmount);
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
 
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }

@@ -381,7 +381,7 @@ public class MarchingSquaresGrid : MonoBehaviour
             if (Vector3.Dot(transform.forward, rH.normal) > 0.15f)
             {
                 //Debug.DrawLine(pos, pos + (transform.forward * 0.12f), Color.green, 5);
-                pos = rH.point + (rH.normal * 0.02f);
+                pos = rH.point + (rH.normal * 0.015f);
             }
             else
             {

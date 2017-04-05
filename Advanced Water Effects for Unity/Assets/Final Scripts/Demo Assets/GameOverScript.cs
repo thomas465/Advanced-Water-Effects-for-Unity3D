@@ -40,7 +40,7 @@ public class GameOverScript : MonoBehaviour {
 
         if(resetTimer<=0)
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene(2);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
     }
 

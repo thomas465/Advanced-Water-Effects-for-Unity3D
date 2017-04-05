@@ -25,6 +25,7 @@ public class SineCupScript : MonoBehaviour
         pos.x = Mathf.Sin(Time.timeSinceLevelLoad * sineSpeed) * sineLength;
         transform.position = pos;
 
+
         sineSpeed += acceleration * Time.deltaTime;
     }
 }

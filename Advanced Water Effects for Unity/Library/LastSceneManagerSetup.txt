@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Main Demo Scene.unity
+- path: Assets/CupTest.unity
   isLoaded: 1
   isActive: 1
