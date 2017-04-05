@@ -55,7 +55,7 @@ public class DecalPoolScript : MonoBehaviour
             {
                 gridPool[i] = Instantiate<GameObject>(vMPool).GetComponent<MarchingSquaresGrid>();
 
-                DontDestroyOnLoad(gridPool[i].gameObject);
+                //DontDestroyOnLoad(gridPool[i].gameObject);
                 gridPool[i].gameObject.SetActive(false);
                 gridPool[i].hideFlags = HideFlags.HideInHierarchy;
             }
@@ -96,7 +96,7 @@ public class DecalPoolScript : MonoBehaviour
     }
 
         /// <summary>
-        /// Checks to see if there is an available grid in this location already which could be re-used for this collision, and creates more metaballs on THAT grid rather than making a new grid.
+        /// Checks to see if there is an available grid in this location already which could be re-used for this collision, and creates more metaballs on that grid rather than making a new grid.
         /// </summary>
         /// <param name="pos"></param>
         /// <param name="size"></param>
@@ -128,7 +128,6 @@ public class DecalPoolScript : MonoBehaviour
             }
         }
 
-        //existingCell = new Cell();
         return false;
     }
 

@@ -1,7 +1,7 @@
 ﻿// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel MetaballImpact
 #pragma kernel GraduallyDisappear
-#pragma kernal GetDensities
+#pragma kernel GetDensities
 
 // Create a RenderTexture with enableRandomWrite flag and set it
 // with cs.SetTexture
@@ -68,5 +68,5 @@ void GraduallyDisappear (uint3 id : SV_DispatchThreadID)
 {
 	int pos = (id.x + gridWidth) + (id.y * gridWidth);// + (id.z * gridWidth * gridHeight);
 
-	allCells[0].nodes[0].density = 2;
+	//allCells[0].nodes[0].density = 2;
 }

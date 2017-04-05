@@ -6,7 +6,7 @@ public class MetaballPoolScript : MonoBehaviour {
 
     public GameObject metaballPrefab;
 
-    public int poolSize = 10;
+    public int poolSize = 100;
 
     [HideInInspector]
     public List<MetaballScript> myMetaballs;

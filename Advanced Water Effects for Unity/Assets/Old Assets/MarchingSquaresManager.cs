@@ -54,7 +54,7 @@ public class MarchingSquaresManager : MonoBehaviour {
         newVertices = new List<Vector3>();
         newTris = new List<int>();
 
-        StartCoroutine("HeavyCalculations");
+        StartCoroutine("MarchingSquaresTick");
     }
 
     void OnDestroy()
@@ -245,7 +245,7 @@ public class MarchingSquaresManager : MonoBehaviour {
         //Debug.Break();
     }
 
-    IEnumerator HeavyCalculations()
+    IEnumerator MarchingSquaresTick()
     {
         while (true)
         {
@@ -256,7 +256,7 @@ public class MarchingSquaresManager : MonoBehaviour {
             {
                 cellArray = new Cell[cellBuffer.count];
                 cellBuffer.GetData(cellArray);
-                Debug.Log(cellArray[0].myNodes[0].intensity);
+                //Debug.Log(cellArray[0].myNodes[0].intensity);
             }
 
             if (myMesh)

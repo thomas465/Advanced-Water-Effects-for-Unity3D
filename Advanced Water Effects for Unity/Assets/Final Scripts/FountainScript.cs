@@ -23,7 +23,7 @@ public class FountainScript : MonoBehaviour {
     float flowForSeconds = 0;
 
     /// <summary>
-    /// If no manager or pool is given, this script will try to find one.
+    /// If no specific manager or pool is given, this function will try to find one.
     /// </summary>
     protected virtual void Start()
     {
@@ -41,12 +41,12 @@ public class FountainScript : MonoBehaviour {
 	protected virtual void Update () {
 
         //Handles the "flow for this many seconds" functionality
-        if(flowForSeconds>0)
+        if (flowForSeconds > 0)
         {
             flowForSeconds -= Time.deltaTime;
             active = true;
 
-            if(flowForSeconds<=0)
+            if (flowForSeconds <= 0)
             {
                 active = false;
             }

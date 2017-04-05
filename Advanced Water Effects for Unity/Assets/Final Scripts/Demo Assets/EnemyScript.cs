@@ -12,9 +12,6 @@ public class EnemyScript : MonoBehaviour
     public float speed = 1;
     float deathThreshold = 0.2f;
 
-    AudioSource hissSource;
-    public AudioClip hissSnd, deathSnd;
-
     public FountainScript mudFountain;
 
     // Use this for initialization
@@ -24,12 +21,12 @@ public class EnemyScript : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         //Sets up audio
-        hissSource = gameObject.AddComponent<AudioSource>();
-        hissSource.spatialBlend = 1;
-        hissSource.clip = hissSnd;
-        hissSource.loop = true;
+        //hissSource = gameObject.AddComponent<AudioSource>();
+        //hissSource.spatialBlend = 1;
+        //hissSource.clip = hissSnd;
+        //hissSource.loop = true;
 
-        hissSource.Play();
+        //hissSource.Play();
 
         //myDamageEffect = GetComponentInChildren<FountainScript>();
 
@@ -47,7 +44,7 @@ public class EnemyScript : MonoBehaviour
         float newWeight = Mathf.Lerp(anim.GetLayerWeight(1), 0, 0.1f * Time.deltaTime);
         anim.SetLayerWeight(1, newWeight);
 
-        hissSource.volume = Mathf.Lerp(hissSource.volume, 0, 3 * Time.deltaTime);
+        //hissSource.volume = Mathf.Lerp(hissSource.volume, 0, 3 * Time.deltaTime);
     }
 
     protected virtual void FixedUpdate()
@@ -74,7 +71,7 @@ public class EnemyScript : MonoBehaviour
         hp -= dmg;
 
         anim.SetLayerWeight(1, anim.GetLayerWeight(1) + dmg * 0.991f);
-        hissSource.volume += dmg * Time.deltaTime;
+        //hissSource.volume += dmg * Time.deltaTime;
 
         transform.localScale -= Vector3.one * 0.05f;
 
@@ -86,7 +83,7 @@ public class EnemyScript : MonoBehaviour
         }
 
         //If the monster is too small to carry on, it dies here leaving a metaball explosion and
-        //gives the player 100 points using ScoreManagerScript.
+        //gives the player some points using ScoreManagerScript.
         if (transform.localScale.x < deathThreshold || hp < 1)
         {
             if (gameObject.activeInHierarchy)

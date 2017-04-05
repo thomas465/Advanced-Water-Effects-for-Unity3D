@@ -5,8 +5,7 @@ using UnityEngine;
 public class MarchingSquaresGrid : MonoBehaviour
 {
     int debug = 0;
-    public static bool marchingSquaresEnabled = true, interpolationEnabled =  false;
-
+    public static bool marchingSquaresEnabled = true, interpolationEnabled = false;
 
     public ComputeShader myCS;
     ComputeBuffer cellCornerBuffer;
@@ -81,7 +80,7 @@ public class MarchingSquaresGrid : MonoBehaviour
         sizeOfNodeStruct = (sizeof(float) * 4);
     }
 
-    CellCorner[] gpuNodeInfo;
+    CellCorner[] gpuCornerInfo;
     Metaball2D[] gpuMetaballInfo;
 
     // Use this for initialization
@@ -156,8 +155,6 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         Vector3 curPos = transform.position - ((transform.right + transform.up) * (worldSize * 0.5f));
 
-        //Debug.DrawLine(startPos, startPos + transform.forward, Color.magenta);
-
         float movementSize = worldSize / resolution;
 
         allCells = new Cell[(int)resolution * (int)resolution];
@@ -166,7 +163,6 @@ public class MarchingSquaresGrid : MonoBehaviour
         {
             for (int x = 0; x < (int)resolution; x++)
             {
-                //Debug.DrawLine(curPos, curPos + transform.forward);
                 CreateCell(curPos, i, movementSize, x, y);
                 i++;
 
@@ -222,20 +218,20 @@ public class MarchingSquaresGrid : MonoBehaviour
     /// <param name="metaballIndex"></param>
     void MoveMetaball(int metaballIndex)
     {
-        Metaball2D curMetaball2D;
-        curMetaball2D = allMetaball2Ds[metaballIndex];
+        //Metaball2D curMetaball2D;
+        //curMetaball2D = allMetaball2Ds[metaballIndex];
 
-        curMetaball2D.pos += curMetaball2D.velocity * Time.deltaTime;
+        //curMetaball2D.pos += curMetaball2D.velocity * Time.deltaTime;
 
-        //Friction
-        float friction = 3;
-        curMetaball2D.velocity -= curMetaball2D.velocity * Time.deltaTime * friction;
+        ////Friction
+        //float friction = 3;
+        //curMetaball2D.velocity -= curMetaball2D.velocity * Time.deltaTime * friction;
 
-        //Gravity
-        float gravityIntensity = 0.5f;
-        curMetaball2D.velocity += metaballGravity * Time.deltaTime * gravityIntensity;
+        ////Gravity
+        //float gravityIntensity = 0.5f;
+        //curMetaball2D.velocity += metaballGravity * Time.deltaTime * gravityIntensity;
 
-        allMetaball2Ds[metaballIndex] = curMetaball2D;
+        //allMetaball2Ds[metaballIndex] = curMetaball2D;
     }
 
     /// <summary>
@@ -243,41 +239,34 @@ public class MarchingSquaresGrid : MonoBehaviour
     /// </summary>
     void AssignDensities()
     {
-        for (int cellIndex = 0; cellIndex < allCells.Length; cellIndex++)
-        {
-            for (int cornerIndex = 0; cornerIndex < allCells[cellIndex].cornerDensities.Length; cornerIndex++)
-            {
-                allCells[cellIndex].cornerDensities[cornerIndex] = 0;
+        //for (int cellIndex = 0; cellIndex < allCells.Length; cellIndex++)
+        //{
+        //    for (int cornerIndex = 0; cornerIndex < allCells[cellIndex].cornerDensities.Length; cornerIndex++)
+        //    {
+        //        allCells[cellIndex].cornerDensities[cornerIndex] = 0;
 
-                for (int metaballIndex = 0; metaballIndex < allMetaball2Ds.Count; metaballIndex++)
-                {                   
-                    Metaball2D m = allMetaball2Ds[metaballIndex];
-                    //m.pos = transform.InverseTransformPoint(m.pos);
-                    //Debug.DrawLine(m.pos, m.pos + transform.forward * 3, Color.magenta);
+        //        for (int metaballIndex = 0; metaballIndex < allMetaball2Ds.Count; metaballIndex++)
+        //        {                   
+        //            Metaball2D m = allMetaball2Ds[metaballIndex];
 
-                    //float otherBit = (m.radius - Vector3.Magnitude((allCells[cellIndex].cornerPositions[cornerIndex] - m.pos)) * Vector3.Magnitude((allCells[cellIndex].cornerPositions[cornerIndex] - m.pos)));
-                    //otherBit *= otherBit;
-                    float dist = Vector3.Distance(m.pos, allCells[cellIndex].cornerPositions[cornerIndex]);
+        //            float dist = Vector3.Distance(m.pos, allCells[cellIndex].cornerPositions[cornerIndex]);
 
-                    if (dist <= m.radius)
-                    {
-                        allCells[cellIndex].cornerDensities[cornerIndex] += 1 - (dist / m.radius);
-                    }
-                    else
-                    {
-                        allCells[cellIndex].cornerDensities[cornerIndex] += 0;
-                    }
-
-
-                    //allCells[cellIndex].cornerDensities[cornerIndex] += (m.radius / otherBit) * 0.0001f;
-                }
-            }
-        }
+        //            if (dist <= m.radius)
+        //            {
+        //                allCells[cellIndex].cornerDensities[cornerIndex] += 1 - (dist / m.radius);
+        //            }
+        //            else
+        //            {
+        //                allCells[cellIndex].cornerDensities[cornerIndex] += 0;
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     /// <summary>
     /// Creates a given number of 2D metaballs at the given location and gives them velocity.
-    /// The maxiumum number of metaballs allowed is also here.
+    /// The maxiumum number of metaballs allowed is also set here.
     /// </summary>
     /// <param name="speed"></param>
     /// <param name="pos"></param>
@@ -325,21 +314,15 @@ public class MarchingSquaresGrid : MonoBehaviour
         metaballBuffer.SetData(allMetaball2Ds.ToArray());
     }
 
-    //This uses raycasting to find an appropriate place to perform the proper raycast.
-    //This will ensure that the 2nd raycast has a clear path to the surface the metaball hit.
+    //This uses raycasting to find an appropriate place to perform the main raycast.
+    //This will ensure that the main raycast has a clear path to the surface the metaball hit.
     Vector3 FindRaycastStart(Vector3 pos, Vector3 forward, float distanceForward)
     {
         RaycastHit rH;
 
-        //return pos + transform.forward * 0.1f;
-
-        //Debug.DrawLine(pos, pos + transform.forward * distanceForward, Color.green, 1);
-
         if (Physics.Raycast(pos + transform.forward*0.1f, transform.forward, out rH, distanceForward, LayerMask.GetMask("Default")))
         {
             Debug.DrawLine(pos, rH.point, Color.red, 4);
-            //Debug.Break();
-            
             return rH.point - transform.forward * 0.1f;
         }
         else
@@ -349,7 +332,7 @@ public class MarchingSquaresGrid : MonoBehaviour
     }
 
     /// <summary>
-    /// This creates a new cell and its corners
+    /// This creates a new cell and its corners at the given position
     /// </summary>
     /// <param name="pos"></param>
     /// <param name="i"></param>
@@ -370,7 +353,6 @@ public class MarchingSquaresGrid : MonoBehaviour
         {
             if (Vector3.Dot(transform.forward, rH.normal) > 0.15f)
             {
-                //Debug.DrawLine(pos, pos + (transform.forward * 0.12f), Color.green, 5);
                 pos = rH.point + (rH.normal * 0.015f);
             }
             else
@@ -396,14 +378,12 @@ public class MarchingSquaresGrid : MonoBehaviour
         allCells[i].cornerPositions[2] = pos + (transform.up * cellSize) + (transform.right * cellSize);
         allCells[i].cornerPositions[3] = pos + (transform.up * cellSize);
 
-
         allCells[i].cornerDensities[0] = 0;
         allCells[i].cornerDensities[1] = 0;
         allCells[i].cornerDensities[2] = 0;
         allCells[i].cornerDensities[3] = 0;
 
         allCells[i].cornerIndices = new int[4];
-
 
         CellCorner bottomLeft = new CellCorner();
         bottomLeft.cornerPosition = allCells[i].cornerPositions[0];
@@ -481,11 +461,6 @@ public class MarchingSquaresGrid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            debug++;
-        }
-
         //Used to detect movements and these variables are used later to move all cells
         movementSinceLastFrame += transform.position - prevPos;
         prevPos = transform.position;
@@ -602,9 +577,9 @@ public class MarchingSquaresGrid : MonoBehaviour
     /// </summary>
     void ReturnDataFromGPU()
     {
-        if (gpuNodeInfo == null || gpuNodeInfo.Length != cellCornerBuffer.count)
+        if (gpuCornerInfo == null || gpuCornerInfo.Length != cellCornerBuffer.count)
         {
-            gpuNodeInfo = new CellCorner[cellCornerBuffer.count];
+            gpuCornerInfo = new CellCorner[cellCornerBuffer.count];
         }
 
         if (gpuMetaballInfo == null || gpuMetaballInfo.Length != metaballBuffer.count)
@@ -612,12 +587,12 @@ public class MarchingSquaresGrid : MonoBehaviour
             gpuMetaballInfo = new Metaball2D[metaballBuffer.count];
         }
 
-        cellCornerBuffer.GetData(gpuNodeInfo);
+        cellCornerBuffer.GetData(gpuCornerInfo);
         metaballBuffer.GetData(gpuMetaballInfo);
 
         for (int i = 0; i < allCorners.Count; i++)
         {
-            allCorners[i] = gpuNodeInfo[i];
+            allCorners[i] = gpuCornerInfo[i];
         }
 
         for (int i = 0; i < allMetaball2Ds.Count; i++)
@@ -661,12 +636,8 @@ public class MarchingSquaresGrid : MonoBehaviour
                 mesh.Clear();
             }
 
-
-
-
             Triangulate();
             
-
             yield return delay;
         }
     }
@@ -693,12 +664,6 @@ public class MarchingSquaresGrid : MonoBehaviour
             cellType |= 4;
         if (c.cornerDensities[3] >= 1)
             cellType |= 8;
-
-        //if(Input.GetKeyDown(KeyCode.C))
-        //    Debug.Log(cellType);
-
-        //if(Input.GetKey(KeyCode.T))
-        //cellType = debug;
 
         //Placing triangles
         switch (cellType)

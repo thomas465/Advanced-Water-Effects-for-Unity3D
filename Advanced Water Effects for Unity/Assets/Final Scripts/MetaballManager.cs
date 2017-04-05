@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Handles Marching Cubes and should be attached to an object which also has a trigger box collider to use as a grid
+/// Handles the Marching Cubes system and should be attached to an object which also has a trigger box collider to use as a grid
 /// </summary>
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -18,8 +18,6 @@ public class MetaballManager : MonoBehaviour
 
     //Movement
     Vector3 movementSinceLastTick = Vector3.zero;
-
-    //ComputeBuffer cellPositions, metaballPositions, metaballPowers;
     
     public ComputeShader myComputeShader;
     ComputeBuffer cellBuffer;
@@ -118,7 +116,6 @@ public class MetaballManager : MonoBehaviour
         public CellCorner(Vector3 _pos)
         {
             pos = _pos;
-            //Debug.DrawLine(pos, pos + Vector3.up * 0.1f, Color.cyan);
         }
 
         //This was where density was previously calculated - this was much slower than the compute shader
@@ -148,6 +145,9 @@ public class MetaballManager : MonoBehaviour
         //}
     }
 
+    /// <summary>
+    /// This is the class containing Cell information, most importantly references to each Cell's Corners
+    /// </summary>
     [System.Serializable]
     public class Cell
     {
@@ -159,11 +159,8 @@ public class MetaballManager : MonoBehaviour
             pos = _pos;
             size = _size;
 
-            //Debug.DrawLine(pos-size/2, pos + size/2, Color.white, 0.1f);
-
             Vector3 reverseSize = size;
             reverseSize.y = -reverseSize.y;
-            //Debug.DrawLine(pos - reverseSize / 2, pos + reverseSize / 2, Color.white, 0.05f);
 
             myCorners = new CellCorner[8];
         }
@@ -171,7 +168,6 @@ public class MetaballManager : MonoBehaviour
         public CellCorner CreateBottomLeftCorner()
         {
             //This creates a node in the bottom left corner of this one
-            //Debug.DrawLine(pos - size / 2, pos - size / 2 + Vector3.up * 0.1f, Color.red, 0.1f);
             return new CellCorner(pos - size / 2);
         }
 
@@ -192,6 +188,7 @@ public class MetaballManager : MonoBehaviour
 
     List<Cell> allCells;
     List<CellCorner> allCellCorners;
+
     float cellVolume = 0;
 
     [HideInInspector]
@@ -213,13 +210,19 @@ public class MetaballManager : MonoBehaviour
     [Header("Level of Detail Settings")]
     Transform mainCamera;
     float tickRate = 0.03f;
+
     [Range(0,1)]
     public float priority = 1;
+
     public float currentDetailLevel = 1;
+
+    //The distance at which this effect should be running at half speed
     public float halfDetailDistance = 45;
+
     public float hideDistance = 125;
 
-    //Variables to prevent garbage collection
+
+    //Stored here to prevent too much garbage collection
     Vector3[] cutEdgePoints;
 
     // Use this for initialization
@@ -235,7 +238,7 @@ public class MetaballManager : MonoBehaviour
         {
             if (!GetComponent<BoxCollider>().isTrigger)
             {
-                Debug.LogWarning("Collider on " + gameObject.name + " has been turned into a trigger; MetaballManager box colliders should always be trigger colliders.");
+                Debug.LogWarning("Collider on " + gameObject.name + " has been turned into a trigger. MetaballManager box colliders should always be trigger colliders.");
                 GetComponent<BoxCollider>().isTrigger = true;
             }
         }
@@ -285,6 +288,7 @@ public class MetaballManager : MonoBehaviour
 
     /// <summary>
     /// This function was previously used to adjust metaball sizes based on the resolution of the grid but has since been simplified to keep metaballs the same size
+    /// but scales them down so that the colliders of metaballs are smaller than the meshes created around them
     /// </summary>
     /// <returns></returns>
     public float GetDesiredMetaballSize()
@@ -294,6 +298,9 @@ public class MetaballManager : MonoBehaviour
         //return cellVolume * 0.0001f;
     }
 
+    /// <summary>
+    /// Debug stuff used only in scene view
+    /// </summary>
     void OnDrawGizmos()
     {
         //for(int i=0; i<allNodes.Count; i++)
@@ -371,7 +378,6 @@ public class MetaballManager : MonoBehaviour
 
                             //3
                             allCells[i - behindOffset].myCorners[3] = newCorner;
-                            //Debug.Log("Current Cell: " + i + "/ Cell behind me?: " + (i - behindOffset));
 
                             //This talks to the one left of the one behind me
                             //2
@@ -518,7 +524,7 @@ public class MetaballManager : MonoBehaviour
                 continue;
             }
 
-            //Pauses Unity if the frame rate is unreasonably low - debug purposes
+            //Pauses Unity if the frame rate is unreasonably low for debug purposes
             if (Time.deltaTime > 0.75f && Time.timeSinceLevelLoad > 1)
             {
                 Debug.Break();
@@ -526,17 +532,16 @@ public class MetaballManager : MonoBehaviour
 
             //Keeps the manager's rotation the same no matter what happens in the scene
             transform.rotation = Quaternion.LookRotation(Vector3.forward);
-
-            //Changes the grid to suit the size of the box
+           
             if (metaballContainer.size != prevContainerSize || resolution != prevRes)
             {
+                //Changes the grid to suit the size of the box if the box changes
                 RefreshGrid();
             }
 
             //Dispatches a Compute Shader kernel which will return data in the next tick
             GetDensitiesFromGPU();
 
-            //Clear the mesh from the previous tick
             myMesh.Clear();
 
             for (int i = 0; i < allCells.Count; i++)
@@ -547,8 +552,8 @@ public class MetaballManager : MonoBehaviour
             //Moves the cells with the Manager's gameobject
             if (movementSinceLastTick != Vector3.zero)
             {
-                Debug.Log(gameObject.name + "'s movement since LF: " + movementSinceLastTick);
-                Debug.DrawLine(transform.position, transform.position - movementSinceLastTick.normalized, Color.red, 0.1f);
+                //Debug.Log(gameObject.name + "'s movement since last tick: " + movementSinceLastTick);
+                //Debug.DrawLine(transform.position, transform.position - movementSinceLastTick.normalized, Color.red, 0.1f);
                 MoveAllThings(movementSinceLastTick);
                 movementSinceLastTick = Vector3.zero;
             }
@@ -580,7 +585,6 @@ public class MetaballManager : MonoBehaviour
 
             //Returns data from the Compute Shader, dispatched last tick
             ReturnDataFromGPUBuffer();
-
         }
     }
 
@@ -601,7 +605,7 @@ public class MetaballManager : MonoBehaviour
     /// </summary>
     void GetDensitiesFromGPU()
     {
-        //Setting GPU array values to match the Unity scene
+        //Making GPU array values match the Unity scene
         if (gpuMetaballs.Length != allMetaballs.Count)
         {
             gpuMetaballs = new GPUMetaball[allMetaballs.Count];
@@ -656,7 +660,7 @@ public class MetaballManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        //Stores values used to keep cells aligned with the MetaballManager if it moves at runtime
+        //Stores values which are used to keep cells aligned with the MetaballManager if it moves at runtime
         movementSinceLastTick += (transform.position - prevPos);
         prevPos = transform.position;
     }
@@ -805,9 +809,6 @@ public class MetaballManager : MonoBehaviour
         finalPoint = v1 + (1 - i1) * (v2 - v1) / (i2 - i1);
 
         finalPoint -= transform.position;
-
-        //if (finalPoint == Vector3.zero)
-        //finalPoint = v1;
 
         return finalPoint;
     }
@@ -1158,12 +1159,4 @@ public class MetaballManager : MonoBehaviour
 {0, 3, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
     }
-
-    //void SetUpEdgeConnections()
-    //{
-    //    edgeConnections = new int[12, 2] {
-    //    { 0,1}, { 1,2}, { 2,3}, { 3,0},
-    //    { 4,5}, { 5,6}, { 6,7}, { 7,4},
-    //    { 0,4}, { 1,5}, { 2,6}, { 3,7} };
-    //}
 }

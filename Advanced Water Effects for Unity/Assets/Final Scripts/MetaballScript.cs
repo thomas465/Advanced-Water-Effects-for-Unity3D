@@ -11,9 +11,8 @@ public class MetaballScript : MonoBehaviour
     public MetaballManager.Metaball myInfo;
     public MetaballPoolScript myMetaballPool;
 
-    //float maxSize = 1;
-
-    float viscocity = 0.95f;
+    [Range(0.75f, 1.0f)]
+    public float viscocity = 0.95f;
 
     bool bounced = false;
 
@@ -51,7 +50,8 @@ public class MetaballScript : MonoBehaviour
         myInfo.pos = transform.position;
         myInfo.life -= Time.deltaTime;
 
-        if(myInfo.life<=1)
+        //Makes the metaball get smaller rather than suddenly disappearing
+        if(myInfo.life<=1 && shrinkAway)
         {
             myInfo.radius = Mathf.Lerp(0, myInfo.radius, myInfo.life);
         }
@@ -175,6 +175,7 @@ public class MetaballScript : MonoBehaviour
     {
         if (!bounced && col.gameObject.layer!=10 && col.gameObject.layer != 4 && col.gameObject.layer!=LayerMask.NameToLayer("Mud"))
         {
+            //This asks the DecalPool to create a Marching Squares grid at the point of collision
             if (DecalPoolScript.singleton && myManager)
             {
                 DecalPoolScript.singleton.CreateStain(col.contacts[0].point, col.contacts[0].normal, col.gameObject, myManager.GetComponent<MeshRenderer>().materials[0]);
@@ -195,9 +196,6 @@ public class MetaballScript : MonoBehaviour
             //Makes fluids break down based on their viscocity
             myInfo.radius *= viscocity;
             transform.localScale *= viscocity;
-
-            //Marching Squares grids were previously created here but that functionality is now in DecalPoolScript
-            //myMSManager.CreateDecalSquares(transform.position, col.contacts[0].normal, rb.velocity.normalized, myInfo.radius, rb.velocity.magnitude);
 
             bounced = true;
         }
