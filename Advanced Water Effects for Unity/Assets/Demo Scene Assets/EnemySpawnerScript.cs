@@ -44,7 +44,7 @@ public class EnemySpawnerScript : MonoBehaviour {
 
     void SpawnEnemy()
     {
-        EnemySpawnPointScript.SpawnRandomly(mudMonster);
+        EnemySpawnPointScript.SpawnRandomly(mudMonster, curWave * 0.75f);
         enemiesLeft++;
     }
 

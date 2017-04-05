@@ -12,6 +12,11 @@ public class ScoreManagerScript : MonoBehaviour {
 
     public GameObject scorePopupPrefab;
 
+    public int GetScore()
+    {
+        return curScore;
+    }
+
     // Use this for initialization
     void Awake() {
         singleton = this;
@@ -22,6 +27,7 @@ public class ScoreManagerScript : MonoBehaviour {
 	void Update () {
 		
 	}
+
 
     public void GiveScore(int _score, Vector3 pos)
     {

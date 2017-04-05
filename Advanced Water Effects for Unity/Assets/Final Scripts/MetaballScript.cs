@@ -3,9 +3,7 @@ using System.Collections;
 
 public class MetaballScript : MonoBehaviour
 {
-
     Rigidbody rb;
-    float scale = 0.2f;
 
     public MetaballManager myManager;
     MarchingSquaresManager myMSManager;
@@ -13,8 +11,7 @@ public class MetaballScript : MonoBehaviour
     public MetaballManager.Metaball myInfo;
     public MetaballPoolScript myMetaballPool;
 
-    bool scaleUp = true;
-    float maxSize = 1;
+    //float maxSize = 1;
 
     float viscocity = 0.95f;
 
@@ -38,8 +35,6 @@ public class MetaballScript : MonoBehaviour
         {
             Debug.LogError("Metaball has no manager!");
         }
-
-        //hideFlags = HideFlags.HideInHierarchy;
     }
 
     void Awake()
@@ -48,7 +43,9 @@ public class MetaballScript : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Updates this metaball's info struct, counts down its life and destroys it when life reaches 0.
+    /// </summary>
     void Update()
     {
         myInfo.pos = transform.position;
@@ -65,6 +62,10 @@ public class MetaballScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Splits the metaball into two metaballs and each of the new metaballs have half the radius of the original metaball.
+    /// </summary>
+    /// <param name="howManyTimes"></param>
     public void Split(int howManyTimes)
     {
         for(int i=0; i<howManyTimes; i++)
@@ -101,6 +102,10 @@ public class MetaballScript : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Basic code for seeing if a collision is a direct hit or if the metaball is just sitting on the floor
+    /// </summary>
+    /// <returns></returns>
     public bool CanHit()
     {
         return GetVelocity().magnitude>4 && gameObject.layer==4;
@@ -123,7 +128,6 @@ public class MetaballScript : MonoBehaviour
         }
 
         myInfo.pos = transform.position;
-        maxSize = myInfo.radius;
         bounced = false;
 
         gameObject.SetActive(true);
@@ -171,19 +175,12 @@ public class MetaballScript : MonoBehaviour
     {
         if (!bounced && col.gameObject.layer!=10 && col.gameObject.layer != 4 && col.gameObject.layer!=LayerMask.NameToLayer("Mud"))
         {
-            //CreateMarchingSquaresNodesOnSurface(col);
-
-            //myMSManager.MetaballCollision(col, this);
-
-            //Debug.Log("Metaball hit layer " + col.gameObject.layer);
-
             if (DecalPoolScript.singleton && myManager)
             {
                 DecalPoolScript.singleton.CreateStain(col.contacts[0].point, col.contacts[0].normal, col.gameObject, myManager.GetComponent<MeshRenderer>().materials[0]);
             }
 
             Vector3 normal = col.contacts[0].normal;
-
             Vector3 sideVelocity = Vector3.Cross(normal, Vector3.right);
 
             transform.rotation = Quaternion.LookRotation(sideVelocity, normal);
@@ -195,10 +192,11 @@ public class MetaballScript : MonoBehaviour
                 rb.velocity += transform.forward * Random.Range(velo.magnitude * 0.5f, velo.magnitude * 0.75f);
             }
 
-            //Makes fluids break down if they're not gloopy
+            //Makes fluids break down based on their viscocity
             myInfo.radius *= viscocity;
             transform.localScale *= viscocity;
 
+            //Marching Squares grids were previously created here but that functionality is now in DecalPoolScript
             //myMSManager.CreateDecalSquares(transform.position, col.contacts[0].normal, rb.velocity.normalized, myInfo.radius, rb.velocity.magnitude);
 
             bounced = true;

@@ -28,6 +28,7 @@ public class HealthbarScript : MonoBehaviour {
     public void TakeDamage(float dmg)
     {
         health -= dmg;
+        DamageEffectScript.Hit();
 
         if(health<0)
         {
@@ -37,7 +38,9 @@ public class HealthbarScript : MonoBehaviour {
 
     public void GameOver()
     {
-
+        PlayerScript.singleton.GetComponent<UnityStandardAssets.Characters.FirstPerson.RigidbodyFirstPersonController>().enabled = false;
+        PlayerScript.singleton.enabled = false;
+        GameOverScript.singleton.Activate(ScoreManagerScript.singleton.GetScore());
     }
 
     public void Reset()

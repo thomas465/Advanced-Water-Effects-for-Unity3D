@@ -5,33 +5,36 @@ using System.Collections;
 public class MetaballPoolScript : MonoBehaviour {
 
     public GameObject metaballPrefab;
-    //public MetaballManager myManager;
 
     public int poolSize = 10;
+
     [HideInInspector]
     public List<MetaballScript> myMetaballs;
 
-	// Use this for initialization
-	void Awake () {
-
-       // if (!myManager)
-            //myManager = GetComponent<MetaballManager>();
-
+    // Use this for initialization
+    void Awake()
+    {
         myMetaballs = new List<MetaballScript>();
-        
-        for(int i=0; i<poolSize; i++)
+
+        for (int i = 0; i < poolSize; i++)
         {
             GameObject nM = GameObject.Instantiate(metaballPrefab);
             nM.SetActive(false);
-            //nM.hideFlags = HideFlags.HideInHierarchy;
+            nM.hideFlags = HideFlags.HideInHierarchy;
             myMetaballs.Add(nM.GetComponent<MetaballScript>());
             myMetaballs[i].myMetaballPool = this;
-            //myMetaballs[myMetaballs.Count - 1].myManager = myManager;
         }
+    }
 
-        
-	}
-
+    /// <summary>
+    /// Creates a metaball at the given position, assigns it to the given MetaballManager, gives the metaball info such as radius and then fires it.
+    /// </summary>
+    /// <param name="manager"></param>
+    /// <param name="origin"></param>
+    /// <param name="direction"></param>
+    /// <param name="speed"></param>
+    /// <param name="metaballRadius"></param>
+    /// <param name="metaballLife"></param>
     public void FireMetaball(MetaballManager manager, Vector3 origin, Vector3 direction, float speed = 3, float metaballRadius = 1.5f, float metaballLife = 10)
     {
         MetaballScript newMetaball = FindValidMetaball();
@@ -67,16 +70,22 @@ public class MetaballPoolScript : MonoBehaviour {
         }
     }
 
-    //Finds an inactive metaball and returns it. Will return null if there are no available metaballs.
+    /// <summary>
+    /// Finds an inactive metaball and returns it. Will return null if there are no available metaballs.
+    /// </summary>
+    /// <returns></returns>
     MetaballScript FindValidMetaball()
     {
         MetaballScript result = null;
 
         for(int i=0; i<myMetaballs.Count; i++)
         {
-            if(!myMetaballs[i].gameObject.activeInHierarchy)
+            if (myMetaballs[i])
             {
-                return myMetaballs[i];
+                if (!myMetaballs[i].gameObject.activeInHierarchy)
+                {
+                    return myMetaballs[i];
+                }
             }
         }
 

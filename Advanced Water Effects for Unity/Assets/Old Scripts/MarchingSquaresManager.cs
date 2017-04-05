@@ -44,7 +44,7 @@ public class MarchingSquaresManager : MonoBehaviour {
 
         cellBuffer = new ComputeBuffer(1, cellSize);
 
-        MeshRenderer r = GetComponent<MeshRenderer>();
+        //MeshRenderer r = GetComponent<MeshRenderer>();
         MeshFilter mF = GetComponent<MeshFilter>();
 
         myMesh = new Mesh();
@@ -317,7 +317,6 @@ public class MarchingSquaresManager : MonoBehaviour {
 
     bool GetClosestNode(Vector3 pos, out Node node)
     {
-        float threshold = 0.5f;
         float curDist = 9999;
         node = new Node();
 

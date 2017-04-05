@@ -15,7 +15,7 @@ public class EnemyScript : MonoBehaviour
     AudioSource hissSource;
     public AudioClip hissSnd, deathSnd;
 
-    FountainScript myDamageEffect;
+    public FountainScript mudFountain;
 
     // Use this for initialization
     protected virtual void Start()
@@ -31,12 +31,12 @@ public class EnemyScript : MonoBehaviour
 
         hissSource.Play();
 
-        myDamageEffect = GetComponentInChildren<FountainScript>();
+        //myDamageEffect = GetComponentInChildren<FountainScript>();
 
         //Attempts to find a mud-based Marching Cubes grid
         if (GameObject.Find("MarchingCubes_Mud"))
         {
-            myDamageEffect.myManager = GameObject.Find("MarchingCubes_Mud").GetComponent<MetaballManager>();
+            mudFountain.myManager = GameObject.Find("MarchingCubes_Mud").GetComponent<MetaballManager>();
         }
     }
 
@@ -80,9 +80,9 @@ public class EnemyScript : MonoBehaviour
 
         if (col != null)
         {
-            myDamageEffect.transform.position = col.contacts[0].point;
-            myDamageEffect.FlowForSeconds(0.1f);
-            myDamageEffect.transform.rotation = Quaternion.LookRotation(col.contacts[0].normal);
+            mudFountain.transform.position = col.contacts[0].point;
+            mudFountain.FlowForSeconds(0.1f);
+            mudFountain.transform.rotation = Quaternion.LookRotation(col.contacts[0].normal);
         }
 
         //If the monster is too small to carry on, it dies here leaving a metaball explosion and
@@ -91,7 +91,7 @@ public class EnemyScript : MonoBehaviour
         {
             if (gameObject.activeInHierarchy)
             {
-                myDamageEffect.Burst(20);
+                mudFountain.Burst(20);
                 ScoreManagerScript.singleton.GiveScore(100, transform.position);
                 gameObject.SetActive(false);
                 Destroy(gameObject);
@@ -102,7 +102,10 @@ public class EnemyScript : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
     }
 
-    //Detects if the collider is a metaball and if so, takes damage.
+    /// <summary>
+    /// Detects if the collider is a metaball and if so, takes damage.
+    /// </summary>
+    /// <param name="col"></param>
     void OnCollisionStay(Collision col)
     {
         MetaballScript m = col.gameObject.GetComponent<MetaballScript>();
@@ -126,6 +129,10 @@ public class EnemyScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Damages the player on collision
+    /// </summary>
+    /// <param name="col"></param>
     void OnCollisionEnter(Collision col)
     {
         PlayerScript p = col.gameObject.GetComponent<PlayerScript>();
@@ -144,5 +151,11 @@ public class EnemyScript : MonoBehaviour
     {
         //Lets the wave manager know that an enemy has died.
         EnemySpawnerScript.EnemyHasDied();
+    }
+
+    public void ApplyDifficulty(float difficulty)
+    {
+        speed += difficulty * 0.35f;
+        transform.localScale *= 1 + (difficulty * 0.09f);
     }
 }

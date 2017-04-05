@@ -41,9 +41,4 @@ public class UIScript : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
     }
-
-    void OnLevelWasLoaded()
-    {
-        //MarchingSquaresGrid.marchingSquaresEnabled = !(SceneManager.GetActiveScene().buildIndex == 1 || SceneManager.GetActiveScene().buildIndex == 2);
-    }
 }

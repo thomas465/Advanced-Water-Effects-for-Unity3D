@@ -29,7 +29,14 @@ public class DecalPoolScript : MonoBehaviour
             singleton = this;
             CreateGridPool(baseGridMaxAmount);
             DontDestroyOnLoad(gameObject);
+
+            UnityEngine.SceneManagement.SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
+    }
+
+    private void SceneManager_sceneLoaded(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.LoadSceneMode arg1)
+    {
+        Reset();
     }
 
     /// <summary>
@@ -52,7 +59,7 @@ public class DecalPoolScript : MonoBehaviour
         }
     }
 
-    void OnLevelWasLoaded()
+    void Reset()
     {
         if (gridPool!=null)
         {
@@ -85,14 +92,6 @@ public class DecalPoolScript : MonoBehaviour
         }
     }
 
-    //public void CreateGrid(Collision col, Material newMaterial = null)
-    //{
-    //    if (!IsExistingGrid(col.contacts[0].point))
-    //    {
-    //        GetAvailableGrid().Create(col.contacts[0].point, col.contacts[0].normal, gridSize, gridRes, col.gameObject, newMaterial);
-    //    }
-    //}
-
         /// <summary>
         /// Checks to see if there is an available grid in this location already which could be re-used for this collision, and creates more metaballs on THAT grid rather than making a new grid.
         /// </summary>
@@ -115,7 +114,7 @@ public class DecalPoolScript : MonoBehaviour
                 {
                     if (dist >= burstThreshold)
                     {
-                        //Debug.Log("Bursting from old one");
+                        //Debug.Log("Re-using old grid");
                         Debug.DrawLine(pos, gridPool[i].transform.position, Color.magenta, 2);
                         gridPool[i].BurstMetaballs(1, pos, 1, metaballSize);
                     }
@@ -158,8 +157,6 @@ public class DecalPoolScript : MonoBehaviour
             curIndex = 0;
         }
 
-        //Debug.Log("RESTPO");
-
         return gridPool[curIndex];
     }
 
@@ -199,7 +196,9 @@ public class DecalPoolScript : MonoBehaviour
         }
     }
 
-    //Destroys all active grids and makes a fresh pool
+    /// <summary>
+    /// Destroys all active grids and makes a fresh pool
+    /// </summary>
     void Rebuild()
     {
         for(int i=0; i<gridPool.Length; i++)

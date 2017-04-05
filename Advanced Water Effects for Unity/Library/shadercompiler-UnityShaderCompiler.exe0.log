@@ -1,2 +1,76 @@
 Base path: C:/Program Files/Unity5.5.0f3/Editor/Data
 Cmd: getPlatforms
+Cmd: preprocess
+  insize=1401 outsize=441 ok=1
+Cmd: preprocess
+  insize=435 outsize=435 ok=1
+Cmd: preprocess
+  insize=7914 outsize=553 ok=1
+Cmd: preprocess
+  insize=1615 outsize=1855 ok=1
+Cmd: preprocess
+  insize=4407 outsize=1085 ok=1
+Cmd: preprocess
+  insize=2996 outsize=1452 ok=1
+Cmd: preprocess
+  insize=1099 outsize=1288 ok=1
+Cmd: preprocess
+  insize=1454 outsize=1799 ok=1
+Cmd: preprocess
+  insize=1013 outsize=1374 ok=1
+Cmd: preprocess
+  insize=12934 outsize=2549 ok=1
+Cmd: preprocess
+  insize=1044 outsize=939 ok=1
+Cmd: preprocess
+  insize=2379 outsize=1059 ok=1
+Cmd: preprocess
+  insize=2237 outsize=943 ok=1
+Cmd: preprocess
+  insize=1609 outsize=230 ok=1
+Cmd: preprocess
+  insize=12072 outsize=2431 ok=1
+Cmd: preprocess
+  insize=2810 outsize=1124 ok=1
+Cmd: preprocess
+  insize=1568 outsize=610 ok=1
+Cmd: preprocess
+  insize=1878 outsize=565 ok=1
+Cmd: preprocess
+  insize=2991 outsize=1457 ok=1
+Cmd: preprocess
+  insize=1013 outsize=1614 ok=1
+Cmd: preprocess
+  insize=1459 outsize=474 ok=1
+Cmd: preprocess
+  insize=2274 outsize=1004 ok=1
+Cmd: preprocess
+  insize=1310 outsize=352 ok=1
+Cmd: preprocess
+  insize=880 outsize=1145 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=8532 outsize=734 kw=DIRECTIONAL pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=8532 outsize=1446 kw=DIRECTIONAL pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
+Cmd: compileSnippet
+  api=4 type=2 insize=8532 outsize=3866 kw=DIRECTIONAL pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
+Cmd: compileSnippet
+  api=4 type=3 insize=8532 outsize=2882 kw=DIRECTIONAL pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=1163 outsize=622 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=1163 outsize=394 kw= pd=UNITY_ENABLE_REFLECTION_BUFFERS UNITY_PBS_USE_BRDF1 UNITY_SPECCUBE_BOX_PROJECTION UNITY_SPECCUBE_BLENDING SHADER_API_DESKTOP UNITY_COLORSPACE_GAMMA ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at (OLD)MarchingSquaresShader.compute(4): 'kernal' : unknown pragma ignored
+  error: 1 plat 4 at (OLD)MarchingSquaresShader.compute(37): implicit truncation of vector type
+  error: 1 plat 4 at (OLD)MarchingSquaresShader.compute(71): race condition writing to shared resource detected, note that threads will be writing the same value, but performance may be diminished due to contention.
+  api=4 insize=1571 outsize=977 ok=1
+Cmd: compileCompute
+  error: 1 plat 4 at MarchingSquaresShader.compute(75): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(77): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(107): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(109): implicit truncation of vector type
+  error: 1 plat 4 at MarchingSquaresShader.compute(122): implicit truncation of vector type
+  api=4 insize=3654 outsize=2341 ok=1
+Cmd: compileCompute
+  api=4 insize=23942 outsize=2721 ok=1

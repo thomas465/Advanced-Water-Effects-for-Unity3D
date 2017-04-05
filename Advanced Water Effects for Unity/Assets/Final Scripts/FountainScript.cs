@@ -40,6 +40,7 @@ public class FountainScript : MonoBehaviour {
 	
 	protected virtual void Update () {
 
+        //Handles the "flow for this many seconds" functionality
         if(flowForSeconds>0)
         {
             flowForSeconds -= Time.deltaTime;
@@ -66,11 +67,6 @@ public class FountainScript : MonoBehaviour {
 
                 dir += transform.right * Random.Range(-randomSize, randomSize);
                 dir += transform.forward * Random.Range(-randomSize, randomSize);
-
-                if(attachedToThisRB)
-                {
-                    //dir += attachedToThisRB.velocity;
-                }
 
                 myMetaballPool.FireMetaball(myManager, transform.position, dir, Random.Range(metaballMinSpeed, metaballMaxSpeed), Random.Range(metaballMinSize, metaballMaxSize), metaballLife);
 

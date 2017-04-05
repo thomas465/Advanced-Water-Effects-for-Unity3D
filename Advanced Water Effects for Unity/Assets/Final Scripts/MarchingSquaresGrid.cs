@@ -94,11 +94,6 @@ public class MarchingSquaresGrid : MonoBehaviour
 
         GetComponent<MeshFilter>().mesh = mesh;
 
-        //if(allCells==null || allCells.Length==0)
-        //{
-        //    //Create(transform.position, transform.forward, 10, 10);
-        //}
-
         if(metaballBuffer==null)
         {
             metaballBuffer = new ComputeBuffer(1, 8);
@@ -173,7 +168,7 @@ public class MarchingSquaresGrid : MonoBehaviour
         resolution = newResolution;
 
         Vector3 curPos = transform.position - ((transform.right + transform.up) * (worldSize * 0.5f));
-        Vector3 startPos = curPos;
+        //Vector3 startPos = curPos;
 
         //Debug.DrawLine(startPos, startPos + transform.forward, Color.magenta);
 
@@ -218,8 +213,7 @@ public class MarchingSquaresGrid : MonoBehaviour
     }
 
     void FixedUpdate()
-    {
-        
+    {      
        // Debug.Log(marchingSquaresEnabled);
     }
 
@@ -250,7 +244,7 @@ public class MarchingSquaresGrid : MonoBehaviour
         curMetaball2D.velocity -= curMetaball2D.velocity * Time.deltaTime * friction;
 
         //Gravity
-        float gravityIntensity = 0.5f;// Random.Range(0.0f, 1.0f);
+        float gravityIntensity = 0.5f;
         curMetaball2D.velocity += metaballGravity * Time.deltaTime * gravityIntensity;
 
         allMetaball2Ds[metaballIndex] = curMetaball2D;
@@ -541,7 +535,7 @@ public class MarchingSquaresGrid : MonoBehaviour
             }
             else
             {
-                int startPos = i * 4;
+                //int startPos = i * 4;
                 TriangulateCell(ref allCells[i]);
             }
         }

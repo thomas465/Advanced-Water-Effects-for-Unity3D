@@ -24,11 +24,17 @@ public class EnemySpawnPointScript : MonoBehaviour {
 		
 	}
 
-    public static int SpawnRandomly(GameObject enemyPrefab)
+    void OnDestroy()
+    {
+        allSpawnPoints = null;
+    }
+
+    public static int SpawnRandomly(GameObject enemyPrefab, float difficulty)
     {
         int randomIndex = Random.Range(0, allSpawnPoints.Length);
 
-        GameObject.Instantiate<GameObject>(enemyPrefab, allSpawnPoints[randomIndex].transform.position, allSpawnPoints[randomIndex].transform.rotation);
+        GameObject newEnemy = GameObject.Instantiate<GameObject>(enemyPrefab, allSpawnPoints[randomIndex].transform.position, allSpawnPoints[randomIndex].transform.rotation);
+        newEnemy.GetComponent<EnemyScript>().ApplyDifficulty(difficulty);
 
         return randomIndex;
     }
