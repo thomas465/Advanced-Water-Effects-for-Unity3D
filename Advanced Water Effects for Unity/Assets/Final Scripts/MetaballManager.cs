@@ -221,8 +221,7 @@ public class MetaballManager : MonoBehaviour
 
     public float hideDistance = 125;
 
-
-    //Stored here to prevent too much garbage collection
+    //CutEdgePoints are stored in this array rather than making a new array each tick. This greatly improves performance
     Vector3[] cutEdgePoints;
 
     // Use this for initialization
@@ -460,6 +459,7 @@ public class MetaballManager : MonoBehaviour
 
         gpuCorners = new GPUCorner[allCellCorners.Count];
         
+        //Syncs corner info between the main list and the array to be sent to the GPU
         for(int i=0; i<gpuCorners.Length; i++)
         {
             gpuCorners[i].pos = allCellCorners[i].pos;
@@ -468,6 +468,7 @@ public class MetaballManager : MonoBehaviour
 
         gpuCells = new GPUCell[allCells.Count];
 
+        //Sets GPU cell positions
         for(int i=0; i<gpuCells.Length; i++)
         {
             gpuCells[i].positions = new GPUCorner[8];
@@ -524,8 +525,8 @@ public class MetaballManager : MonoBehaviour
                 continue;
             }
 
-            //Pauses Unity if the frame rate is unreasonably low for debug purposes
-            if (Time.deltaTime > 0.75f && Time.timeSinceLevelLoad > 1)
+            //Pauses Unity if the frame rate is unreasonably low - allows the simulation to be stopped
+            if (Time.deltaTime >= 1.0f && Time.timeSinceLevelLoad > 1)
             {
                 Debug.Break();
             }
@@ -583,7 +584,7 @@ public class MetaballManager : MonoBehaviour
             
             yield return new WaitForSeconds(tickRate);
 
-            //Returns data from the Compute Shader, dispatched last tick
+            //Returns data from the Compute Shader which was dispatched before WaitForSeconds. The delay gives the GPU more time to finish density calculations
             ReturnDataFromGPUBuffer();
         }
     }
@@ -684,8 +685,7 @@ public class MetaballManager : MonoBehaviour
 
         if (triangleBuffer != null)
             triangleBuffer.Release();
-        
-
+       
     }
 
     //This is from before metaballs were physical PhysX objects

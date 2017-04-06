@@ -1,4 +1,5 @@
-﻿Shader "Custom/CustomWaterTEST" {
+﻿//UNUSED
+Shader "Custom/CustomWaterTEST" {
 	Properties{
 		_Color("Color", Color) = (1,1,1,1)
 

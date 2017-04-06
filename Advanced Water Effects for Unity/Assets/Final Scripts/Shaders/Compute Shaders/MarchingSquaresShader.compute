@@ -72,7 +72,7 @@ void MoveMetaball(int i)
 	//Ensures that a metaball never falls up or falls too quickly
 	gravityIntensity = clamp(gravityIntensity, 0.001f, 29.0f);
 
-	//Moves all metaballs based on where the grid is moving in the scene
+	//Moves this metaball based on where the grid is moving in the scene
 	allMetaballs[i].pos += movementSinceLastFrame;
 
 	//Applies changes to the velocity, and then applies the velocity to the metaball's position

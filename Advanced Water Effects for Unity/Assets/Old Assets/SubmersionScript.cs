@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
-/// Old approach
+/// Old approach using "wet maps"
 /// </summary>
 public class SubmersionScript : MonoBehaviour
 {

@@ -31,15 +31,8 @@ public class DecalPoolScript : MonoBehaviour
             CreateGridPool(baseGridMaxAmount);
             //DontDestroyOnLoad(gameObject);
 
-            UnityEngine.SceneManagement.SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-
             MarchingSquaresGrid.interpolationEnabled = enableInterpolation;
         }
-    }
-
-    private void SceneManager_sceneLoaded(UnityEngine.SceneManagement.Scene arg0, UnityEngine.SceneManagement.LoadSceneMode arg1)
-    {
-        Reset();
     }
 
     /// <summary>
@@ -62,22 +55,6 @@ public class DecalPoolScript : MonoBehaviour
         }
     }
 
-    void Reset()
-    {
-        if (gridPool!=null)
-        {
-            for (int i = 0; i < gridPool.Length; i++)
-            {
-                if (gridPool[i])
-                {
-                    Destroy(gridPool[i]);
-                }
-            }
-        }
-
-        CreateGridPool(baseGridMaxAmount);
-    }
-
     /// <summary>
     /// Activates a grid from the pool and places it at the given position
     /// </summary>
@@ -95,13 +72,14 @@ public class DecalPoolScript : MonoBehaviour
         }
     }
 
-        /// <summary>
-        /// Checks to see if there is an available grid in this location already which could be re-used for this collision, and creates more metaballs on that grid rather than making a new grid.
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <param name="size"></param>
-        /// <param name="metaballSize"></param>
-        /// <returns></returns>
+    /// <summary>
+    /// Checks to see if there is an available grid in this location already which could be re-used for this collision. 
+    /// If there is a grid available, this creates more metaballs on that grid rather than making a new grid.
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <param name="size"></param>
+    /// <param name="metaballSize"></param>
+    /// <returns></returns>
     bool IsExistingGrid(Vector3 pos, float size, float metaballSize)
     {
         float threshold = baseGridSize * size * 0.25f;
@@ -118,7 +96,7 @@ public class DecalPoolScript : MonoBehaviour
                     if (dist >= burstThreshold)
                     {
                         //Debug.Log("Re-using old grid");
-                        Debug.DrawLine(pos, gridPool[i].transform.position, Color.magenta, 2);
+                        //Debug.DrawLine(pos, gridPool[i].transform.position, Color.magenta, 2);
                         gridPool[i].BurstMetaballs(1, pos, 1, metaballSize);
                     }
 
@@ -132,7 +110,7 @@ public class DecalPoolScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Tries to find an inactive grid, and if there are none then it takes the oldest active grid it can find.
+    /// Tries to find an inactive grid, and if there are none then it returns the oldest active grid it can find.
     /// </summary>
     /// <returns></returns>
     MarchingSquaresGrid GetAvailableGrid()

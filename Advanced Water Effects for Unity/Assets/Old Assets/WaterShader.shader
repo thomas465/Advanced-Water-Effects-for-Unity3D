@@ -96,7 +96,7 @@ void surf(Input IN, inout SurfaceOutput o)
 	//grabOffset.x -= 0.3f;
 	grabOffset.y -= 0.23f * o.Normal;
 
-	
+
 
 	float rawZ = SAMPLE_DEPTH_TEXTURE_PROJ(_CameraDepthTexture, UNITY_PROJ_COORD(IN.screenPos));
 	float sceneZ = LinearEyeDepth(rawZ);
@@ -105,7 +105,7 @@ void surf(Input IN, inout SurfaceOutput o)
 	float fade = 0.0;
 
 	if (rawZ > 0.0) // Make sure the depth texture exists
-		fade = saturate((_InvFade + (_SinTime[3])/8) * (sceneZ - partZ));
+		fade = saturate((_InvFade + (_SinTime[3]) / 8) * (sceneZ - partZ));
 
 	fade = fade;
 
